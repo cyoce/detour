@@ -1,0 +1,44 @@
+
+
+
+/<{\
+\:<?>[+].
+
+
+A: if n > 1: [n-1, n-2] => A
+	else: [n] => |+|
+
+
++ Add
+> Add 1
+- Subtract
+< Subtract 1
+_ Divide
+m Mod
+! negate
+| max
+& min
+~ filter (only let truthy data true)
+
+
+T two-way split (down)
+t two-way split (up)
+? conditional trampoline
+{ duplicate and trampoline for one only
+[ store to stack
+] reduce stack by instructions in the middle upon stailization
+\ bounce
+/ bounce
+
+
+: input (assumed to be )
+; feed into input
+. return
+, output
+
+
+
+
+Truth machine:
+
+,~
