@@ -1,44 +1,57 @@
 
+Fibonacci (12):
+	<T>[+].
+	;\$<
 
-
-/<{\
-\:<?>[+].
-
-
-A: if n > 1: [n-1, n-2] => A
-	else: [n] => |+|
-
-
-+ Add
-> Add 1
-- Subtract
-< Subtract 1
-_ Divide
-m Mod
-! negate
-| max
-& min
-~ filter (only let truthy data true)
-
-
-T two-way split (down)
-t two-way split (up)
-? conditional trampoline
-{ duplicate and trampoline for one only
-[ store to stack
-] reduce stack by instructions in the middle upon stailization
-\ bounce
-/ bounce
-
-
-: input (assumed to be )
-; feed into input
-. return
-, output
+Factorial (11):
+	<?x$;>L[*].
 
 
 
+Hello World (17):
+	`"Hello, World!".
 
-Truth machine:
+Truth Machine (2):
+	~,
 
-,~
+Math:
+	+ Add
+	> Add 1
+	- Subtract
+	< Subtract 1
+	_ Divide
+	m Mod
+	! negate
+	| max/or
+	& min/and
+	~ filter (only let truthy data through)
+	` insert following data at that location
+	r random number
+
+data flow:
+	T two-way split (down)
+	t two-way split (up)
+	X three-way split (-1, 0, +1)
+	? conditional trampoline
+	$ duplicate trampoline
+	# random direction
+
+	\ bounce
+	/ bounce
+	p point right
+	q point left
+	A point up
+	V point down
+	% turnstile bounce
+
+loops:
+	[] reduce loop
+	() while loop
+	{} duplicate loop
+
+I/O:
+	: input (assumed to be in the center)
+	; feed into input
+	i get input
+	. return
+	, output
