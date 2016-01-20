@@ -309,13 +309,18 @@ const detour = {
 			o.move(-1);
 			o.dir = 0;
 		},
-		"R" (...args){
+		"R" (...args){ // reduce
 			let o = new Item(args[0]);
 			o._move();
 			let p = new Item(args[0]);
 			if (args.length%2) args.push((new Item(0)).concat(p))
 			p.value = args.reduce(detour.opdict[detour.chargrid[o.y][o.x]]);
 			p.move(1);
+		},
+		"~" (x){ // filter
+			if (x > 0){
+				(new Item(x)).move();
+			}
 		}
 	}
 };
