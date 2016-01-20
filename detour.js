@@ -3,6 +3,9 @@
 $ (document).ready (load);
 function load(){
 	$ ("#btn-run").click (run);
+	$ ("#stop").click(function(){
+		detour.stop = true;
+	})
 }
 var preprocess = x => x;
 // $("#btn-run")
@@ -20,6 +23,8 @@ function run (){
 	}
 	if (input_y === undefined){
 		let idx = Math.floor(lines.length/2);
+		if ((idx % 2)) idx--;
+	//	console.log(idx, lines.length-idx);
 		for (var i = 0; i < lines.length; i++){
 			lines [i] = (i === idx ? ":" : " ") + lines [i];
 		}
@@ -43,11 +48,137 @@ function run (){
 	detour.height = detour.chargrid.length;
 	detour.itemgrid = [detour.newgrid(Array)];
 	detour.itemgrid.last [input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
+	detour.stop = false;
 	detour.update();
 }
 function genmatrix (chars){
 
 }
+class Item {
+	constructor (val, x, y){
+		let len = arguments.length;
+		if (len <= 1){
+			x = 0;
+			y = 0;
+		} else {
+			this.x = x;
+			this.y = y;
+		}
+		if (len){
+			if (typeof val === "object"){
+				for (var i in val){
+					this [i] = val [i]
+				}
+			} else {
+				this.value = val;
+			}
+		}
+	}
+	move (x){
+		if (~x) do {
+			this._move();
+		} while (x--);
+		detour.itemgrid.last[this.y][this.x].push(this);
+	}
+	_move (){
+		this.x = detour.opdict.m (this.x + this.vx, detour.width);
+		this.y = detour.opdict.m (this.y + this.vy, detour.height);
+	}
+	comp (chars){
+		let i = 1, o = new Item (this);
+		o.vals = [];
+		while (i){
+			o._move();
+			let char = detour.chargrid [o.y][o.x];
+			if (char === chars [0]){
+				i++;
+			} else if (char === chars [1]){
+				i--;
+			} else {
+				o.vals.push(...(detour.itemgrid.last[o.y][o.x].concat(detour.itemgrid[detour.itemgrid.length-2])|| []))
+			}
+		}
+		return o;
+	}
+	concat (other){
+		var o = {};
+		for (var i in other){
+			if (other.hasOwnProperty (i)) o [i] = other [i];
+		}
+		for (var i in this){
+			if (this.hasOwnProperty (i)) o [i] = this [i];
+		}
+		o.other = this.other.concat(other.other);
+		return new Item(o);
+	}
+	toString(){
+		return String(this.value)
+	}
+	valueOf(){
+		return this.value;
+	}
+	set dir (val){
+		val = detour.opdict.m (val, 4);
+		var xy = [-~val%2, val%2].map(n => n * Math.sign((Math.abs(val-1.5)|0)*2-1));
+		console.log (...xy);
+		this.vx = xy [0];
+		this.vy = xy [1];
+	}
+	get dir (){
+		if (this.vx === 0){
+			if (this.vy === 1){ // [0, +1]
+				return 3;
+			} else { // [0, -1]
+				return 1;
+			}
+		} else {
+			if (this.vx === 1){ // [+1, 0]
+				return 0
+			} else { // [-1, 0]
+				return 2;
+			}
+		}
+	}
+
+}
+Item.prototype.vx = 1;
+Item.prototype.vy = 0;
+Item.prototype.moving = true;
+Item.prototype.other = [];
+
+function setup (){
+	for (var i in detour.opdict){
+		let func = detour.opdict [i];
+		if (func.length === 1) detour.fdict [i] = ((f) => function (x){
+			let o = Object.create(x);
+			o.value = f (o.value);
+			o = new Item(o);
+			o.move();
+		})(func);
+		else detour.fdict [i] = ((f) => function (x,y){
+			// console.log(x,y);
+			x = x || new Item;
+			let o = x.concat(y);
+			o.value = f (x.value, y.value);
+			o.move();
+		})(func);
+	}
+}
+
+function ret (value){
+	return function (){
+		return value;
+	};
+}
+Object.defineProperty(Array.prototype, 'last', {
+	get (){
+		return this [this.length-1];
+	},
+	set (val){
+		this [this.length-1] = val;
+	}
+});
+
 
 
 const detour = {
@@ -63,15 +194,27 @@ const detour = {
 		return out;
 	},
 	update (){
+		if (detour.stop) return;
 		detour.itemgrid.push(detour.newgrid(Array));
-		var table = [[]], items = detour.itemgrid, moving=false, items=detour.itemgrid.slice(-2)[0];
+		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
 		for (detour.y = 0; detour.y < detour.height; detour.y++){
 			for (detour.x = 0; detour.x < detour.width; detour.x++){
 				let args = items [detour.y][detour.x],
 					func = detour.funcgrid [detour.y][detour.x];
-				if (args.length >= func.length) detour.run (func, args), moving = true;
+				if (args.length >= func.length && func.length) detour.run (func, args), moving = true;
+				if (func === detour.fdict["R"] && args.length) reducers.push([detour.x, detour.y, window.__args=args, func]);
 			}
 		}
+		let go = detour.fast || confirm("moving")
+		if (moving){
+
+		} else if (reducers.length){
+			let reducer = reducers[0], x = reducer[0], y = reducer[1], args = reducer[2], func = reducer [3];
+			detour.run (func, args);
+		} else {
+			go = false;
+		}
+		if(go) detour.timeout = setTimeout(detour.update, detour.interval);
 		for (var y = 0; y < detour.height; y++){
 			for (var x = 0; x < detour.width; x++){
 				let cell = detour.itemgrid.last[y][x]
@@ -80,13 +223,10 @@ const detour = {
 			}
 		}
 		if (detour.debug) $("#stdout").html(detour.table(table));
-		if (moving){
-			let go = detour.fast || confirm("moving")
-			if(go) detour.timeout = setTimeout(detour.update, detour.interval);
-		}
+
 
 	},
-	interval: 500,
+	interval: 1000,
 	fast:true,
 	run (func, args){
 		func (...args.splice(-func.length));
@@ -112,6 +252,7 @@ const detour = {
 	itemgrid:[],
 	opdict: {
 		",": (x) => (alert(x),x),
+		".": (x) => (alert(x),detour.stop=true),
 		":": (x) => x,
 		" ": (x) => x,
 		"<": (x) => x - 1,
@@ -133,81 +274,50 @@ const detour = {
 		"d": (x,y) => [Math.floor(x / y),detour.opdict.m(x,y)], // divmod
 	},
 	fdict:{
-		"x"(x){ // remove
+		"x" (x){ // remove
 
+		},
+		"\\" (x){ // mirror
+			let o = new Item (x), temp = o.vx;
+			o.vx = o.vy;
+			o.vy = temp;
+			o.move();
+		},
+		"/" (x){ // mirror
+			let o = new Item (x), temp = o.vx;
+			o.vx = -o.vy;
+			o.vy = -temp;
+			o.move();
+		},
+		"?" (x){ // condition
+			let o = new Item(x);
+			o.move(x.value > 0);
+		},
+		"T" (x){ // split
+			let o = new Item (x);
+			if (o.value > 0) o.dir++;
+			o.move();
+		},
+		"$" (x){ // dupe
+			let o = new Item (x), p = new Item (x);
+			o.move(1);
+			p.move( );
+		},
+		";" (x){ // recurse
+			let o = new Item (x);
+			o.x = Item.prototype.x;
+			o.y = Item.prototype.y;
+			o.move(-1);
+			o.dir = 0;
+		},
+		"R" (...args){
+			let o = new Item(args[0]);
+			o._move();
+			let p = new Item(args[0]);
+			if (args.length%2) args.push((new Item(0)).concat(p))
+			p.value = args.reduce(detour.opdict[detour.chargrid[o.y][o.x]]);
+			p.move(1);
 		}
 	}
 };
-class Item {
-	constructor (val, x, y){
-		let len = arguments.length;
-		if (len <= 1){
-			x = 0;
-			y = 0;
-		} else {
-			this.x = x;
-			this.y = y;
-		}
-		if (len){
-			if (typeof val === "object"){
-				for (var i in val){
-					this [i] = val [i]
-				}
-			} else {
-				this.value = val;
-			}
-		}
-	}
-	move (){
-		this.x = detour.opdict.m (this.x + this.xv, detour.width);
-		this.y = detour.opdict.m (this.y + this.yv, detour.height);
-		detour.itemgrid.last[this.y][this.x].push(this);
-	}
-	concat (other){
-		var o = {};
-		for (var i in other){
-			if (other.hasOwnProperty (i)) o [i] = other [i];
-		}
-		for (var i in this){
-			if (this.hasOwnProperty (i)) o [i] = this [i];
-		}
-		o.other = this.other.concat(other.other);
-		return new Item(o);
-	}
-	toString(){
-		return String(this.value)
-	}
-}
-Item.prototype.xv = 1;
-Item.prototype.yv = 0;
-Item.prototype.moving = true;
-Item.prototype.other = [];
-
-for (var i in detour.opdict){
-	let func = detour.opdict [i];
-	if (func.length === 1) detour.fdict [i] = ((f) => function (x){
-		let o = Object.create(x);
-		o.value = f (o.value);
-		o = new Item(o);
-		o.move();
-	})(func);
-	else detour.fdict [i] = ((f) => function (x,y){
-		let o = x.concat(y);
-		o.value = f (x.value, y.value);
-		o.move();
-	})(func);
-}
-
-function ret (value){
-	return function (){
-		return value;
-	};
-}
-Object.defineProperty(Array.prototype, 'last', {
-	get (){
-		return this [this.length-1];
-	},
-	set (val){
-		this [this.length-1] = val;
-	}
-});
+setup();
