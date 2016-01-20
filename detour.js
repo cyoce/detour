@@ -279,13 +279,13 @@ const detour = {
 		},
 		"\\" (x){ // mirror
 			let o = new Item (x), temp = o.vx;
-			o.vx = o.vy;
+			o.vx = -o.vy;
 			o.vy = temp;
 			o.move();
 		},
 		"/" (x){ // mirror
 			let o = new Item (x), temp = o.vx;
-			o.vx = -o.vy;
+			o.vx = o.vy;
 			o.vy = -temp;
 			o.move();
 		},
