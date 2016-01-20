@@ -120,7 +120,6 @@ class Item {
 	set dir (val){
 		val = detour.opdict.m (val, 4);
 		var xy = [-~val%2, val%2].map(n => n * Math.sign((Math.abs(val-1.5)|0)*2-1));
-		console.log (...xy);
 		this.vx = xy [0];
 		this.vy = xy [1];
 	}
