@@ -81,11 +81,13 @@ const detour = {
 		}
 		if (detour.debug) $("#stdout").html(detour.table(table));
 		if (moving){
-			if(confirm("moving")) detour.timeout = setTimeout(detour.update, detour.interval);
+			let go = detour.fast || confirm("moving")
+			if(go) detour.timeout = setTimeout(detour.update, detour.interval);
 		}
 
 	},
-	interval: 1000,
+	interval: 500,
+	fast:true,
 	run (func, args){
 		func (...args.splice(-func.length));
 	},
@@ -170,6 +172,7 @@ class Item {
 			if (this.hasOwnProperty (i)) o [i] = this [i];
 		}
 		o.other = this.other.concat(other.other);
+		return new Item(o);
 	}
 	toString(){
 		return String(this.value)
@@ -178,6 +181,7 @@ class Item {
 Item.prototype.xv = 1;
 Item.prototype.yv = 0;
 Item.prototype.moving = true;
+Item.prototype.other = [];
 
 for (var i in detour.opdict){
 	let func = detour.opdict [i];
