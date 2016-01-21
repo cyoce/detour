@@ -16,13 +16,13 @@ function run (){
 		input_y,
 		input_x;
 	if (lines.slice(-1)[0] === '') lines.splice(-1)
-	for (let i = 0; i < lines.length; i++){
-		let line = lines [i];
-		let idx = line.indexOf(":")
+	for (var i = 0; i < lines.length; i++){
+		var line = lines [i];
+		var idx = line.indexOf(":")
 		if (!input_y && ~idx) input_y = i, input_x = idx;
 	}
 	if (input_y === undefined){
-		let idx = Math.floor(lines.length/2);
+		var idx = Math.floor(lines.length/2);
 		if ((idx % 2)) idx--;
 	//	console.log(idx, lines.length-idx);
 		for (var i = 0; i < lines.length; i++){
@@ -56,7 +56,7 @@ function genmatrix (chars){
 }
 class Item {
 	constructor (val, x, y){
-		let len = arguments.length;
+		var len = arguments.length;
 		if (len <= 1){
 			x = 0;
 			y = 0;
@@ -85,11 +85,11 @@ class Item {
 		this.y = detour.opdict.m (this.y + this.vy, detour.height);
 	}
 	comp (chars){
-		let i = 1, o = new Item (this);
+		var i = 1, o = new Item (this);
 		o.vals = [];
 		while (i){
 			o._move();
-			let char = detour.chargrid [o.y][o.x];
+			var char = detour.chargrid [o.y][o.x];
 			if (char === chars [0]){
 				i++;
 			} else if (char === chars [1]){
@@ -147,9 +147,9 @@ Item.prototype.other = [];
 
 function setup (){
 	for (var i in detour.opdict){
-		let func = detour.opdict [i];
+		var func = detour.opdict [i];
 		if (func.length === 1) detour.fdict [i] = ((f) => function (x){
-			let o = Object.create(x);
+			var o = Object.create(x);
 			o.value = f (o.value);
 			o = new Item(o);
 			o.move();
@@ -157,7 +157,7 @@ function setup (){
 		else detour.fdict [i] = ((f) => function (x,y){
 			// console.log(x,y);
 			x = x || new Item;
-			let o = x.concat(y);
+			var o = x.concat(y);
 			o.value = f (x.value, y.value);
 			o.move();
 		})(func);
@@ -198,17 +198,17 @@ const detour = {
 		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
 		for (detour.y = 0; detour.y < detour.height; detour.y++){
 			for (detour.x = 0; detour.x < detour.width; detour.x++){
-				let args = items [detour.y][detour.x],
+				var args = items [detour.y][detour.x],
 					func = detour.funcgrid [detour.y][detour.x];
 				if (args.length >= func.length && func.length) detour.run (func, args), moving = true;
 				if (func === detour.fdict["R"] && args.length) reducers.push([detour.x, detour.y, window.__args=args, func]);
 			}
 		}
-		let go = detour.fast || confirm("moving")
+		var go = detour.fast || confirm("moving")
 		if (moving){
 
 		} else if (reducers.length){
-			let reducer = reducers[0], x = reducer[0], y = reducer[1], args = reducer[2], func = reducer [3];
+			var reducer = reducers[0], x = reducer[0], y = reducer[1], args = reducer[2], func = reducer [3];
 			detour.run (func, args);
 		} else {
 			go = false;
@@ -216,7 +216,7 @@ const detour = {
 		if(go) detour.timeout = setTimeout(detour.update, detour.interval);
 		for (var y = 0; y < detour.height; y++){
 			for (var x = 0; x < detour.width; x++){
-				let cell = detour.itemgrid.last[y][x]
+				var cell = detour.itemgrid.last[y][x]
 				cell.splice(0, 0, ...detour.itemgrid [detour.itemgrid.length-2][y][x])
 				if (detour.debug) table [y][x] = detour.chargrid [y][x] + "<br> " + cell.join(', ');
 			}
@@ -277,42 +277,42 @@ const detour = {
 
 		},
 		"\\" (x){ // mirror
-			let o = new Item (x), temp = o.vx;
+			var o = new Item (x), temp = o.vx;
 			o.vx = -o.vy;
 			o.vy = temp;
 			o.move();
 		},
 		"/" (x){ // mirror
-			let o = new Item (x), temp = o.vx;
+			var o = new Item (x), temp = o.vx;
 			o.vx = o.vy;
 			o.vy = -temp;
 			o.move();
 		},
 		"?" (x){ // condition
-			let o = new Item(x);
+			var o = new Item(x);
 			o.move(x.value > 0);
 		},
 		"T" (x){ // split
-			let o = new Item (x);
+			var o = new Item (x);
 			if (o.value > 0) o.dir++;
 			o.move();
 		},
 		"$" (x){ // dupe
-			let o = new Item (x), p = new Item (x);
+			var o = new Item (x), p = new Item (x);
 			o.move(1);
 			p.move( );
 		},
 		";" (x){ // recurse
-			let o = new Item (x);
+			var o = new Item (x);
 			o.x = Item.prototype.x;
 			o.y = Item.prototype.y;
 			o.move(-1);
 			o.dir = 0;
 		},
 		"R" (...args){ // reduce
-			let o = new Item(args[0]);
+			var o = new Item(args[0]);
 			o._move();
-			let p = new Item(args[0]);
+			var p = new Item(args[0]);
 			if (args.length%2) args.push((new Item(0)).concat(p))
 			p.value = args.reduce(detour.opdict[detour.chargrid[o.y][o.x]]);
 			p.move(1);
