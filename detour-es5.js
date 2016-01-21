@@ -476,8 +476,8 @@ function last(object, index, newval) {
 			// mirror
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
-			o.vx = -o.vy;
-			o.vy = -temp;
+			o.vx = o.vy;
+			o.vy = temp;
 			o.move();
 		},
 		"/": function _(x) {
@@ -500,7 +500,7 @@ function last(object, index, newval) {
 		"T": function T(x) {
 			// split
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
-			if (o.value > 0) o.dir++;
+			if (o.value > 0) o.dir--;
 			o.move();
 		},
 		"$": function $(x) {
