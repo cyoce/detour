@@ -47,7 +47,7 @@ function run (){
 	detour.width = detour.chargrid [0].length;
 	detour.height = detour.chargrid.length;
 	detour.itemgrid = [detour.newgrid(Array)];
-	detour.itemgrid.last [input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
+	last(detour.itemgrid)[input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
 	detour.stop = false;
 	detour.update();
 }
@@ -78,7 +78,7 @@ class Item {
 		if (~x) do {
 			this._move();
 		} while (x--);
-		detour.itemgrid.last[this.y][this.x].push(this);
+		last(detour.itemgrid)[this.y][this.x].push(this);
 	}
 	_move (){
 		this.x = detour.opdict.m (this.x + this.vx, detour.width);
@@ -95,7 +95,7 @@ class Item {
 			} else if (char === chars [1]){
 				i--;
 			} else {
-				o.vals.push(...(detour.itemgrid.last[o.y][o.x].concat(detour.itemgrid[detour.itemgrid.length-2])|| []))
+				o.vals.push(...(last(detour.itemgrid)[o.y][o.x].concat(last(detour.itemgrid,-2))|| []))
 			}
 		}
 		return o;
@@ -169,14 +169,18 @@ function ret (value){
 		return value;
 	};
 }
-Object.defineProperty(Array.prototype, 'last', {
-	get (){
-		return this [this.length-1];
-	},
-	set (val){
-		this [this.length-1] = val;
+function last (object, index, newval){
+	var idx;
+	if (arguments.length < 2){
+		index = -1;
 	}
-});
+	idx = detour.opdict.m(index, object.length);
+	if (arguments.length < 3){
+		return object [idx];
+	} else {
+		return object [idx] = newval;
+	}
+}
 
 
 
@@ -216,8 +220,8 @@ const detour = {
 		if(go) detour.timeout = setTimeout(detour.update, detour.interval);
 		for (var y = 0; y < detour.height; y++){
 			for (var x = 0; x < detour.width; x++){
-				var cell = detour.itemgrid.last[y][x]
-				cell.splice(0, 0, ...detour.itemgrid [detour.itemgrid.length-2][y][x])
+				var cell = last(detour.itemgrid)[y][x]
+				cell.splice(0, 0, ...last(detour.itemgrid,-2)[y][x])
 				if (detour.debug) table [y][x] = detour.chargrid [y][x] + "<br> " + cell.join(', ');
 			}
 		}
@@ -225,7 +229,7 @@ const detour = {
 
 
 	},
-	interval: 1000,
+	interval: 350,
 	fast:true,
 	run (func, args){
 		func (...args.splice(-func.length));
