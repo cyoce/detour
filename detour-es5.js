@@ -34,7 +34,7 @@ function load() {
 	});
 	$("#markdown").click(function () {
 		var source = $("#source").val();
-		var out = "[Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
+		var out = "# [Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
 		out += source.length + " bytes\n";
 		out += ("\n" + source).replace(/\n/g, "\n    ");
 		out += "\n\n[Try it online!](" + applyquery({ code: $('#source').val() }, 'http://rawgit.com/cyoce/detour/master/interp.html') + ")";
@@ -130,6 +130,9 @@ function run() {
 		return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 	})));
 	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = false;
+	$("#stop").attr("disabled", false);
+	$("#editor").css("display", "none");
+	$("#stdout").css("height", "90%");
 	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).update();
 }
 function genmatrix(chars) {}
@@ -309,7 +312,12 @@ function last(object, index, newval) {
 		return out;
 	},
 	update: function update() {
-		if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop) return;
+		if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop) {
+			$("#stop").attr("disabled", true);
+			$("#editor").css("display", "block");
+			$("#stdout").css("height", "40px");
+			return;
+		}
 		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid.push((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(Array));
 		var table = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(),
 		    moving = false,
@@ -350,9 +358,9 @@ function last(object, index, newval) {
 		func.apply(undefined, _toConsumableArray(args.splice(-func.length)));
 	},
 	table: function table(grid) {
-		var out = "<table class='full'><tr>";
+		var out = "<table class='full' height='90%'><tr>";
 		for (var i = 0; i < grid.length; i++) {
-			out += "\t<tr>\n";
+			out += "\t<tr height='" + String(100 / grid.length) + "%'>\n";
 			var array = grid[i];
 			for (var j = 0; j < array.length; j++) {
 				out += "\t\t<td width='" + String(100 / array.length) + "%'>";

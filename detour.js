@@ -103,6 +103,9 @@ function run (){
 	detour.itemgrid = [detour.newgrid(Array)];
 	last(detour.itemgrid)[input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
 	detour.stop = false;
+	$("#stop").attr("disabled", false);
+	$("#editor").css("display","none");
+	$("#stdout").css("height","90%");
 	detour.update();
 }
 function genmatrix (chars){
@@ -255,7 +258,12 @@ const detour = {
 		return out;
 	},
 	update (){
-		if (detour.stop) return;
+		if (detour.stop){
+			$("#stop").attr("disabled",true);
+			$("#editor").css("display","block");
+			$("#stdout").css("height", "40px");
+			return;
+		}
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
 		for (detour.y = 0; detour.y < detour.height; detour.y++){
@@ -293,9 +301,9 @@ const detour = {
 		func (...args.splice(-func.length));
 	},
 	table (grid){
-		var out = "<table class='full'><tr>";
+		var out = "<table class='full' height='90%'><tr>";
 		for (var i = 0; i < grid.length; i++){
-			out += "\t<tr>\n";
+			out += "\t<tr height='" + String(100/grid.length) + "%'>\n";
 			var array = grid [i];
 			for (var j = 0; j < array.length; j++){
 				out += "\t\t<td width='" + String(100/array.length) + "%'>";
