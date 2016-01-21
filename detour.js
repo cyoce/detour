@@ -294,7 +294,9 @@ const detour = {
 		},
 		"?" (x){ // condition
 			var o = new Item(x);
-			o.move(x.value > 0);
+			if (x > 0){
+				o.move (1)
+			}
 		},
 		"T" (x){ // split
 			var o = new Item (x);
@@ -314,11 +316,16 @@ const detour = {
 			o.dir = 0;
 		},
 		"R" (...args){ // reduce
-			var o = new Item(args[0]);
+			var o = new Item(args[0]), x;
 			o._move();
 			var p = new Item(args[0]);
-			if (args.length%2) args.push((new Item(0)).concat(p))
-			p.value = args.reduce(detour.opdict[detour.chargrid[o.y][o.x]]);
+			// if (args.length%2) args.push((new Item(0)).concat(p))
+			var func = detour.opdict[detour.chargrid[o.y][o.x]];
+			if (args.length%2) x = args.pop();
+			p.value = args.reduce(func);
+			if (typeof x !== "undefined"){
+				p.value = [p, x].reduce(func);
+			}
 			p.move(1);
 		},
 		"~" (x){ // filter

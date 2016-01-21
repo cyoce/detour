@@ -400,7 +400,9 @@ function last(object, index, newval) {
 		"?": function _(x) {
 			// condition
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
-			o.move(x.value > 0);
+			if (x > 0) {
+				o.move(1);
+			}
 		},
 		"T": function T(x) {
 			// split
@@ -429,11 +431,17 @@ function last(object, index, newval) {
 			}
 
 			// reduce
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]);
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]),
+			    x;
 			o._move();
 			var p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]);
-			if (args.length % 2) args.push(new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(0).concat(p));
-			p.value = args.reduce((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x]]);
+			// if (args.length%2) args.push((new Item(0)).concat(p))
+			var func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x]];
+			if (args.length % 2) x = args.pop();
+			p.value = args.reduce(func);
+			if (typeof x !== "undefined") {
+				p.value = [p, x].reduce(func);
+			}
 			p.move(1);
 		},
 		"~": function _(x) {
