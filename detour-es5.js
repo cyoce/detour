@@ -30,7 +30,7 @@ function load() {
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
 	$("#permalink").click(function () {
-		$("#linkbox").attr("href", applyquery({ code: $("#source").val() }, 'http://rawgit.com/cyoce/Detour/master/interp.html'));
+		$("#linkbox").attr("href", applyquery({ code: $("#source").val() }, 'http://rawgit.com/cyoce/detour/master/interp.html'));
 	});
 	var query = parse_query(location.href);
 	if (query && query.code) {
