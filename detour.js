@@ -5,7 +5,14 @@ function load(){
 	$ ("#btn-run").click (run);
 	$ ("#stop").click(function(){
 		detour.stop = true;
-	})
+	});
+	$ ("#interval").change(function (){
+		detour.interval = this.value;
+		$("#show-interval").text(this.value);
+	});
+setInterval(function(){
+	$("#bytes").text(" - " + $("#source").val().length + " bytes");
+})
 }
 var preprocess = x => x;
 // $("#btn-run")
@@ -274,7 +281,16 @@ const detour = {
 		"Z": (x,y) => x ^ y,
 		"a": (x,y) => Math.min(x,y),
 		"&": (x,y) => x & y,
-		"d": (x,y) => [Math.floor(x / y),detour.opdict.m(x,y)], // divmod
+		"0": (x) => 0,
+		"1": (x) => 1,
+		"2": (x) => 2,
+		"3": (x) => 3,
+		"4": (x) => 4,
+		"5": (x) => 5,
+		"6": (x) => 6,
+		"7": (x) => 7,
+		"8": (x) => 8,
+		"9": (x) => 9,
 	},
 	fdict:{
 		"x" (x){ // remove
@@ -296,6 +312,8 @@ const detour = {
 			var o = new Item(x);
 			if (x > 0){
 				o.move (1)
+			} else {
+				o.move();
 			}
 		},
 		"T" (x){ // split
@@ -316,6 +334,7 @@ const detour = {
 			o.dir = 0;
 		},
 		"R" (...args){ // reduce
+			if (args.length === 1) return (new Item(args [0])).move(1);
 			var o = new Item(args[0]), x;
 			o._move();
 			var p = new Item(args[0]);
@@ -332,6 +351,16 @@ const detour = {
 			if (x > 0){
 				(new Item(x)).move();
 			}
+		},
+		"p" (x){
+			var o = new Item(x);
+			o.dir = 0;
+			o.move();
+		},
+		"q" (x){
+			var o = new Item(x);
+			o.dir = 2;
+			o.move();
 		}
 	}
 };

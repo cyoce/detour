@@ -22,6 +22,13 @@ function load() {
 	$("#stop").click(function () {
 		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true;
 	});
+	$("#interval").change(function () {
+		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).interval = this.value;
+		$("#show-interval").text(this.value);
+	});
+	setInterval(function () {
+		$("#bytes").text(" - " + $("#source").val().length + " bytes");
+	});
 }
 var preprocess = function preprocess(x) {
 	return x;
@@ -373,10 +380,37 @@ function last(object, index, newval) {
 		"&": function _(x, y) {
 			return x & y;
 		},
-		"d": function d(x, y) {
-			return [Math.floor(x / y), (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict.m(x, y)];
-		} },
-	// divmod
+		"0": function _(x) {
+			return 0;
+		},
+		"1": function _(x) {
+			return 1;
+		},
+		"2": function _(x) {
+			return 2;
+		},
+		"3": function _(x) {
+			return 3;
+		},
+		"4": function _(x) {
+			return 4;
+		},
+		"5": function _(x) {
+			return 5;
+		},
+		"6": function _(x) {
+			return 6;
+		},
+		"7": function _(x) {
+			return 7;
+		},
+		"8": function _(x) {
+			return 8;
+		},
+		"9": function _(x) {
+			return 9;
+		}
+	},
 	fdict: {
 		"x": function x(_x) {// remove
 
@@ -393,8 +427,8 @@ function last(object, index, newval) {
 			// mirror
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
-			o.vx = o.vy;
-			o.vy = temp;
+			o.vx = -o.vy;
+			o.vy = -temp;
 			o.move();
 		},
 		"?": function _(x) {
@@ -402,6 +436,8 @@ function last(object, index, newval) {
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 			if (x > 0) {
 				o.move(1);
+			} else {
+				o.move();
 			}
 		},
 		"T": function T(x) {
@@ -431,6 +467,7 @@ function last(object, index, newval) {
 			}
 
 			// reduce
+			if (args.length === 1) return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]).move(1);
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]),
 			    x;
 			o._move();
@@ -449,6 +486,16 @@ function last(object, index, newval) {
 			if (x > 0) {
 				new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x).move();
 			}
+		},
+		"p": function p(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 0;
+			o.move();
+		},
+		"q": function q(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 2;
+			o.move();
 		}
 	}
 };
