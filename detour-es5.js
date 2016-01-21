@@ -30,7 +30,7 @@ var preprocess = function preprocess(x) {
 function run() {
 	var _last$input_y$input_x;
 
-	var source = $("#source")[0].innerText,
+	var source = $("#source").val(),
 	    lines = source.split("\n"),
 	    input_y,
 	    input_x;

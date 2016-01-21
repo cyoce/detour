@@ -11,7 +11,7 @@ var preprocess = x => x;
 // $("#btn-run")
 function run (){
 	var
-		source = $ ("#source")[0].innerText,
+		source = $ ("#source").val(),
 		lines = source.split("\n"),
 		input_y,
 		input_x;
