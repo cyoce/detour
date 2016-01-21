@@ -386,7 +386,7 @@ function last(object, index, newval) {
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
 			o.vx = -o.vy;
-			o.vy = temp;
+			o.vy = -temp;
 			o.move();
 		},
 		"/": function _(x) {
@@ -394,7 +394,7 @@ function last(object, index, newval) {
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
 			o.vx = o.vy;
-			o.vy = -temp;
+			o.vy = temp;
 			o.move();
 		},
 		"?": function _(x) {

@@ -283,12 +283,12 @@ const detour = {
 		"\\" (x){ // mirror
 			var o = new Item (x), temp = o.vx;
 			o.vx = -o.vy;
-			o.vy = temp;
+			o.vy = -temp;
 			o.move();
 		},
 		"/" (x){ // mirror
 			var o = new Item (x), temp = o.vx;
-			o.vx = o.vy;
+			o.vx = -o.vy;
 			o.vy = -temp;
 			o.move();
 		},
