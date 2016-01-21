@@ -18,7 +18,7 @@ function load(){
 	});
 	$("#markdown").click(function(){
 		var source = $("#source").val();
-		var out = "[Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
+		var out = "# [Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
 		out += source.length + " bytes\n";
 		out += ("\n" + source).replace(/\n/g, "\n    ");
 		out += "\n\n[Try it online!](" + applyquery({code:$('#source').val()}, 'http://rawgit.com/cyoce/detour/master/interp.html') + ")";

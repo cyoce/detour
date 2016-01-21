@@ -1,12 +1,11 @@
 
 Fibonacci (12):
-	<T>[+].
+	<T>R+.
 	;\$<
 
-Factorial (11):
-	<?x$;>L[*].
-
-
+Factorial (10):
+<?\$;>R*.
+  \  1/
 
 Hello World (17):
 	`"Hello, World!".
@@ -21,6 +20,7 @@ Math:
 	< Subtract 1
 	_ Divide
 	m Mod
+	d divmod
 	! negate
 	| max/or
 	& min/and
@@ -42,7 +42,7 @@ data flow:
 	q point left
 	A point up
 	V point down
-	% turnstile bounce
+	% toggling bounce
 
 loops:
 	[] reduce loop
