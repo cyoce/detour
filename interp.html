@@ -14,11 +14,12 @@
 		<h2 class='mono'>
 			Program
 			<button id="btn-run" class="mono btn"> Run </button><span id='bytes'></span>
-			<br>
-			<button id="permalink" class="mono btn">Permalink</button><a target='blank' class='mono box' id='linkbox' href=''>Link here</a>
+			<button id="permalink" class="mono btn">Permalink</button>
+			<button id="markdown" class="mono btn">Markdown</button>
 		</h2>
 		<br>
-		<input class='mono' type='range' min='0' max='2000' step='100' defaultValue='400' id='interval'></input><span id='show-interval'></span>
+		<span class='mono'>Interval: </span><input class='mono' type='range' min='0' max='2000' step='100' defaultValue='400' id='interval'></input><span id='show-interval' class='mono'>400</span>
+		<br>
 		<textarea id="source" class="mono box full"></textarea>
 		<br>
 		<br>

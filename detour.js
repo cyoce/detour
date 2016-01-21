@@ -14,8 +14,18 @@ function load(){
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
 	$("#permalink").click(function(){
-		$("#linkbox").attr("href",applyquery({code:$("#source").val()}, 'http://rawgit.com/cyoce/detour/master/interp.html'));
+		window.open(applyquery({code:$("#source").val()}, 'http://rawgit.com/cyoce/detour/master/interp.html'));
 	});
+	$("#markdown").click(function(){
+		var source = $("#source").val();
+		var out = "[Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
+		out += source.length + " bytes\n";
+		out += ("\n" + source).replace(/\n/g, "\n    ");
+		out += "\n\n[Try it online!](" + applyquery({code:$('#source').val()}, 'http://rawgit.com/cyoce/detour/master/interp.html') + ")";
+		$("#source").val(out).select();
+		document.execCommand("copy");
+		$("#source").val(source);
+	})
 	var query = parse_query(location.href);
 	if (query && query.code) {
 		$("#source").val(query.code);
