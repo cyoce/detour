@@ -274,6 +274,10 @@ function setup() {
 			};
 		})(func);
 	}
+	for (var i in (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers) {
+		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[i] = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers[i];
+		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducelist.push((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers[i]);
+	}
 }
 
 function ret(value) {
@@ -316,7 +320,7 @@ function last(object, index, newval) {
 				var args = items[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x],
 				    func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).funcgrid[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x];
 				if (args.length >= func.length && func.length) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args), moving = true;
-				if (func === (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict["R"] && args.length) reducers.push([(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y, window.__args = args, func]);
+				if (~(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducelist.indexOf(func) && args.length) reducers.push([(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y, window.__args = args, func]);
 			}
 		}
 		var go = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fast || confirm("moving");
@@ -506,6 +510,24 @@ function last(object, index, newval) {
 			o.move(-1);
 			o.dir = 0;
 		},
+		"~": function _(x) {
+			// filter
+			if (x > 0) {
+				new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x).move();
+			}
+		},
+		"p": function p(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 0;
+			o.move();
+		},
+		"q": function q(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 2;
+			o.move();
+		}
+	},
+	reducers: {
 		"R": function R() {
 			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 				args[_key] = arguments[_key];
@@ -526,22 +548,29 @@ function last(object, index, newval) {
 			}
 			p.move(1);
 		},
-		"~": function _(x) {
-			// filter
-			if (x > 0) {
-				new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x).move();
+		"S": function S(x, y) {
+			// sum
+			var o = _temporalUndefined;
+			o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			if (arguments.length > 1) {
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).value += y.value;
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).move(-1);
+			} else {
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).move();
 			}
 		},
-		"p": function p(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
-			o.dir = 0;
-			o.move();
-		},
-		"q": function q(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
-			o.dir = 2;
-			o.move();
+		"P": function P(x, y) {
+			// product
+			var o = _temporalUndefined;
+			o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			if (arguments.length > 1) {
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).value *= y.value;
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).move(-1);
+			} else {
+				(_temporalAssertDefined(o, "o", _temporalUndefined) && o).move();
+			}
 		}
-	}
+	},
+	reducelist: []
 };
 setup();

@@ -216,6 +216,10 @@ function setup (){
 			o.move();
 		})(func);
 	}
+	for (var i in detour.reducers){
+		detour.fdict [i] = detour.reducers [i];
+		detour.reducelist.push(detour.reducers[i]);
+	}
 }
 
 function ret (value){
@@ -259,7 +263,7 @@ const detour = {
 				var args = items [detour.y][detour.x],
 					func = detour.funcgrid [detour.y][detour.x];
 				if (args.length >= func.length && func.length) detour.run (func, args), moving = true;
-				if (func === detour.fdict["R"] && args.length) reducers.push([detour.x, detour.y, window.__args=args, func]);
+				if (~detour.reducelist.indexOf(func) && args.length) reducers.push([detour.x, detour.y, window.__args=args, func]);
 			}
 		}
 		var go = detour.fast || confirm("moving")
@@ -380,20 +384,6 @@ const detour = {
 			o.move(-1);
 			o.dir = 0;
 		},
-		"R" (...args){ // reduce
-			if (args.length === 1) return (new Item(args [0])).move(1);
-			var o = new Item(args[0]), x;
-			o._move();
-			var p = new Item(args[0]);
-			// if (args.length%2) args.push((new Item(0)).concat(p))
-			var func = detour.opdict[detour.chargrid[o.y][o.x]];
-			if (args.length%2) x = args.pop();
-			p.value = args.reduce(func);
-			if (typeof x !== "undefined"){
-				p.value = [p, x].reduce(func);
-			}
-			p.move(1);
-		},
 		"~" (x){ // filter
 			if (x > 0){
 				(new Item(x)).move();
@@ -409,6 +399,41 @@ const detour = {
 			o.dir = 2;
 			o.move();
 		}
-	}
+	},
+	reducers:{
+		"R" (...args){ // reduce
+			if (args.length === 1) return (new Item(args [0])).move(1);
+			var o = new Item(args[0]), x;
+			o._move();
+			var p = new Item(args[0]);
+			// if (args.length%2) args.push((new Item(0)).concat(p))
+			var func = detour.opdict[detour.chargrid[o.y][o.x]];
+			if (args.length%2) x = args.pop();
+			p.value = args.reduce(func);
+			if (typeof x !== "undefined"){
+				p.value = [p, x].reduce(func);
+			}
+			p.move(1);
+		},
+		"S" (x,y){ // sum
+			let o = new Item (x);
+			if (arguments.length > 1){
+				o.value += y.value;
+				o.move(-1);
+			} else {
+				o.move();
+			}
+		},
+		"P" (x,y){ // product
+			let o = new Item (x);
+			if (arguments.length > 1){
+				o.value *= y.value;
+				o.move(-1);
+			} else {
+				o.move();
+			}
+		},
+	},
+	reducelist:[]
 };
 setup();
