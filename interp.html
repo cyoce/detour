@@ -11,7 +11,14 @@
 		<h2 class="mono"> Input </h2>
 		<input type="text" placeholder="input" id="stdin" class="mono box"/>
 		<br>
-		<h2 class='mono'> Program <button id="btn-run" class="mono btn"> Run </button></h2>
+		<h2 class='mono'>
+			Program
+			<button id="btn-run" class="mono btn"> Run </button><span id='bytes'></span>
+			<br>
+			<button id="permalink" class="mono btn">Permalink</button><a target='blank' class='mono box' id='linkbox' href=''>Link here</a>
+		</h2>
+		<br>
+		<input class='mono' type='range' min='0' max='2000' step='100' defaultValue='400'></input><span id='show-interval'></span>
 		<textarea id="source" class="mono box full"></textarea>
 		<br>
 		<br>
