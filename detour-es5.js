@@ -29,6 +29,41 @@ function load() {
 	setInterval(function () {
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
+	$("#permalink").click(function () {
+		$("#linkbox").attr("href", applyquery({ code: $("#source").val() }, 'http://rawgit.com/cyoce/Detour/master/interp.html'));
+	});
+	var query = parse_query(location.href);
+	if (query && query.code) {
+		$("#source").val(query.code);
+	}
+	if (query === null) query = {};
+	function applyquery(query, href) {
+		href = href || location.href;
+		href = href.split("?")[0];
+		return href + gen_query(query);
+	}
+	function parse_query(href) {
+		href = String(href).split("?");
+		if (href.length <= 1) return null;
+		href = href[1];
+		var out = {};
+		var keys = href.split("&");
+		for (var i = 0; i < keys.length; i++) {
+			var pair = keys[i].split('=');
+			out[unescape(pair[0])] = unescape(pair[1]);
+		}
+		return out;
+	}
+	function gen_query(obj) {
+		if (obj === null || obj === Object.create(null)) return '';
+		var out = '?';
+		for (var key in obj) {
+			if (!obj.hasOwnProperty(key)) continue;
+			if (out.length !== 1) out += "&";
+			out += escape(key) + "=" + escape(obj[key]);
+		}
+		return out;
+	}
 }
 var preprocess = function preprocess(x) {
 	return x;
