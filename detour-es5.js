@@ -546,6 +546,18 @@ function last(object, index, newval) {
 			if (o.value > 0) o.dir++;
 			o.move();
 		},
+		"Q": function Q(x) {
+			// split
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			if (o.value > 0) {
+				o.dir++;
+				o._move();
+				o.dir--;
+				o.move(-1);
+			} else {
+				o.move();
+			}
+		},
 		"$": function $(x) {
 			// dupe
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),

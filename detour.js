@@ -418,6 +418,17 @@ const detour = {
 			if (o.value > 0) o.dir++;
 			o.move();
 		},
+		"Q" (x){ // split
+			var o = new Item (x);
+			if (o.value > 0){
+				o.dir++;
+				o._move();
+				o.dir--;
+				o.move(-1);
+			} else {
+				o.move();
+			}
+		},
 		"$" (x){ // dupe
 			var o = new Item (x), p = new Item (x);
 			o.move(1);
