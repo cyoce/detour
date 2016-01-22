@@ -4,8 +4,8 @@ Fibonacci (12):
 	;\$<
 
 Factorial (10):
-<?\$;>R*.
-  \  1/
+<T0 \
+.\$;p>P
 
 Hello World (17):
 	`"Hello, World!".
