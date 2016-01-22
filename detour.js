@@ -14,14 +14,14 @@ function load(){
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
 	$("#permalink").click(function(){
-		window.open(applyquery({hex:hexcompress($("#source").val())}, 'http://rawgit.com/cyoce/detour/master/interp.html'));
+		window.open(applyquery({hex:hexcompress($("#source").val())}, 'https://rawgit.com/cyoce/detour/master/interp.html'));
 	});
 	$("#markdown").click(function(){
 		var source = $("#source").val();
-		var out = "# [Detour](http://rawgit.com/cyoce/detour/master/interp.html), ";
+		var out = "# [Detour](https://rawgit.com/cyoce/detour/master/interp.html), ";
 		out += source.length + " bytes\n";
 		out += ("\n" + source).replace(/\n/g, "\n    ");
-		out += "\n\n[Try it online!](" + applyquery({hex:hexcompress($('#source').val())}, 'http://rawgit.com/cyoce/detour/master/interp.html') + ")";
+		out += "\n\n[Try it online!](" + applyquery({hex:hexcompress($('#source').val())}, 'https://rawgit.com/cyoce/detour/master/interp.html') + ")";
 		$("#source").val(out).select();
 		document.execCommand("copy");
 		$("#source").val(source);
