@@ -13,6 +13,11 @@ Hello World (17):
 Truth Machine (2):
 	~,
 
+Sum 1..n:
+?x$\S.
+ ;</
+
+
 Math:
 	+ Add
 	> Add 1

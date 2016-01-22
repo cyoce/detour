@@ -270,7 +270,7 @@ const detour = {
 			for (detour.x = 0; detour.x < detour.width; detour.x++){
 				var args = items [detour.y][detour.x],
 					func = detour.funcgrid [detour.y][detour.x];
-				if (args.length >= func.length && func.length) detour.run (func, args), moving = true;
+				while (args.length >= func.length && func.length) detour.run (func, args), moving = true;
 				if (~detour.reducelist.indexOf(func) && args.length) reducers.push([detour.x, detour.y, window.__args=args, func]);
 			}
 		}

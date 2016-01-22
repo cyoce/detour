@@ -327,7 +327,7 @@ function last(object, index, newval) {
 			for ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x = 0; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x++) {
 				var args = items[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x],
 				    func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).funcgrid[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x];
-				if (args.length >= func.length && func.length) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args), moving = true;
+				while (args.length >= func.length && func.length) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args), moving = true;
 				if (~(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducelist.indexOf(func) && args.length) reducers.push([(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y, window.__args = args, func]);
 			}
 		}
