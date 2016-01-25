@@ -254,7 +254,7 @@ Item = (function () {
 	}, {
 		key: "toString",
 		value: function toString() {
-			return String(this.value);
+			return String(this.value) + ">V<^"[this.dir];
 		}
 	}, {
 		key: "valueOf",
@@ -390,7 +390,7 @@ function last(object, index, newval) {
 			for (var x = 0; x < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width; x++) {
 				var cell = last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[y][x];
 				cell.splice.apply(cell, [0, 0].concat(_toConsumableArray(last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid, -2)[y][x])));
-				if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).debug) table[y][x] = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[y][x] + "<br> " + cell.join(', ');
+				if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).debug) table[y][x] = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[y][x] + "<br> " + cell.join(' ');
 			}
 		}
 		if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).debug) $("#stdout").html((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).table(table));

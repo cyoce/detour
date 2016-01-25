@@ -207,7 +207,7 @@ class Item {
 		return new Item(o);
 	}
 	toString(){
-		return String(this.value)
+		return String(this.value) + ">V<^" [this.dir];
 	}
 	valueOf(){
 		return this.value;
@@ -326,7 +326,7 @@ const detour = {
 			for (var x = 0; x < detour.width; x++){
 				var cell = last(detour.itemgrid)[y][x]
 				cell.splice(0, 0, ...last(detour.itemgrid,-2)[y][x])
-				if (detour.debug) table [y][x] = detour.chargrid [y][x] + "<br> " + cell.join(', ');
+				if (detour.debug) table [y][x] = detour.chargrid [y][x] + "<br> " + cell.join(' ');
 			}
 		}
 		if (detour.debug) $("#stdout").html(detour.table(table));
