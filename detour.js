@@ -173,7 +173,7 @@ class Item {
 		if (~x) do {
 			this._move();
 		} while (x--);
-		last(detour.itemgrid)[this.y][this.x].push(this);
+		last(detour.itemgrid)[this.y][this.x].unshift(this);
 	}
 	_move (){
 		this.x = detour.opdict.m (this.x + this.vx, detour.width);

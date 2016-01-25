@@ -209,7 +209,7 @@ Item = (function () {
 			if (~x) do {
 				this._move();
 			} while (x--);
-			last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[this.y][this.x].push(this);
+			last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[this.y][this.x].unshift(this);
 		}
 	}, {
 		key: "_move",
