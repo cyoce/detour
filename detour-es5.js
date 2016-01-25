@@ -381,7 +381,7 @@ function last(object, index, newval) {
 			    y = reducer[1],
 			    args = reducer[2],
 			    func = reducer[3];
-			(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args);
+			(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args, true);
 		} else {
 			go = false;
 		}
@@ -600,9 +600,50 @@ function last(object, index, newval) {
 			// skip
 			var o = x.comp("()");
 			o.move();
+		},
+		"r": function r(x, y) {
+			// range
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			x = x.value;
+			y = y.value;
+			var swap,
+			    out = [];
+			if (x > y) {
+				var t = x;
+				x = y;
+				y = t;
+				swap = true;
+			}
+			while (x <= y) out.push(x++);
+			if (!swap) out.reverse();
+			for (var i = 0; i < out.length; i++) {
+				var obj = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+				obj.value = out[i];
+				obj.move();
+			}
 		}
 	},
 	reducers: {
+		"L": function L() {
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			// reduce left
+			if (args.length === 1) return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]).move(1);
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]),
+			    x;
+			o._move();
+			var p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]);
+			// if (args.length%2) args.push((new Item(0)).concat(p))
+			var func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x]];
+			if (args.length % 2) x = args.pop();
+			p.value = args.reduce(func);
+			if (typeof x !== "undefined") {
+				p.value = [p, x].reduce(func);
+			}
+			p.move(1);
+		},
 		"S": function S(x, y) {
 			// sum
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);

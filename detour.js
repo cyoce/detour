@@ -317,7 +317,7 @@ const detour = {
 
 		} else if (reducers.length){
 			var reducer = reducers[0], x = reducer[0], y = reducer[1], args = reducer[2], func = reducer [3];
-			detour.run (func, args);
+			detour.run (func, args, true);
 		} else {
 			go = false;
 		}
@@ -464,10 +464,43 @@ const detour = {
 		"(" (x) { // skip
 			var o = x.comp("()");
 			o.move();
-		}
+		},
+		"r"  (x,y){ // range
+			var o = new Item (x);
+			x = x.value;
+			y = y.value;
+			var swap, out = [];
+			if (x > y){
+				var t = x;
+				x = y;
+				y = t;
+				swap = true;
+			}
+			while (x <= y) out.push(x++);
+			if (!swap) out.reverse();
+			for (var i = 0; i < out.length; i++){
+				var obj = new Item (o);
+				obj.value = out[i];
+				obj.move();
+			}
+		},
 	},
 	reducers:{
-		"S" (x,y){ // sum
+		"L" (...args){ // reduce left
+			if (args.length === 1) return (new Item(args [0])).move(1);
+			var o = new Item(args[0]), x;
+			o._move();
+			var p = new Item(args[0]);
+			// if (args.length%2) args.push((new Item(0)).concat(p))
+			var func = detour.opdict[detour.chargrid[o.y][o.x]];
+			if (args.length%2) x = args.pop();
+			p.value = args.reduce(func);
+			if (typeof x !== "undefined"){
+				p.value = [p, x].reduce(func);
+			}
+			p.move(1);
+		},
+		"S" (x, y){ // sum
 			var o = new Item (x);
 			if (arguments.length > 1){
 				o.value += y.value;
