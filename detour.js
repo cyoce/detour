@@ -484,6 +484,11 @@ const detour = {
 				obj.move();
 			}
 		},
+		"s" (x,y){ // swap
+			var o = new Item (x), p = new Item (y);
+			o.move();
+			p.move();
+		}
 	},
 	reducers:{
 		"L" (...args){ // reduce left

@@ -621,6 +621,13 @@ function last(object, index, newval) {
 				obj.value = out[i];
 				obj.move();
 			}
+		},
+		"s": function s(x, y) {
+			// swap
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(y);
+			o.move();
+			p.move();
 		}
 	},
 	reducers: {
