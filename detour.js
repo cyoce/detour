@@ -455,25 +455,20 @@ const detour = {
 			var o = new Item(x);
 			o.dir = 2;
 			o.move();
+		},
+		"{" (x){ // dupe
+			var o = x.comp("{}"), p = new Item (x);
+			o.move();
+			p.move();
+		},
+		"(" (x) { // skip
+			var o = x.comp("()");
+			o.move();
 		}
 	},
 	reducers:{
-		"R" (...args){ // reduce
-			if (args.length === 1) return (new Item(args [0])).move(1);
-			var o = new Item(args[0]), x;
-			o._move();
-			var p = new Item(args[0]);
-			// if (args.length%2) args.push((new Item(0)).concat(p))
-			var func = detour.opdict[detour.chargrid[o.y][o.x]];
-			if (args.length%2) x = args.pop();
-			p.value = args.reduce(func);
-			if (typeof x !== "undefined"){
-				p.value = [p, x].reduce(func);
-			}
-			p.move(1);
-		},
 		"S" (x,y){ // sum
-			let o = new Item (x);
+			var o = new Item (x);
 			if (arguments.length > 1){
 				o.value += y.value;
 				o.move(-1);
@@ -482,7 +477,7 @@ const detour = {
 			}
 		},
 		"P" (x,y){ // product
-			let o = new Item (x);
+			var o = new Item (x);
 			if (arguments.length > 1){
 				o.value *= y.value;
 				o.move(-1);
@@ -490,6 +485,16 @@ const detour = {
 				o.move();
 			}
 		},
+		"R" (x,y){ // reduce
+			var o = new Item (x), p = new Item (x);
+			if (arguments.length > 1){
+				o._move();
+				p.value = detour.opdict[detour.chargrid[o.y][o.x]] (x.value, y.value);
+				p.move(-1);
+			} else {
+				o.move(1);
+			}
+		}
 	},
 	reducelist:[]
 };
