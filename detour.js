@@ -470,6 +470,23 @@ const detour = {
 			var o = x.comp("()");
 			o.move();
 		},
+		"]" (x) {
+			var o = new Item (x), p = x.comp("][");
+			if (x > 0){
+				p.move();
+			} else {
+				o.move();
+			}
+		},
+		"[" (x){
+			var o;
+			if (x <= 0){
+				o = x.comp("[]");
+			} else {
+				o = new Item (x);
+			}
+			o.move();
+		},
 		"r"  (x,y){ // range
 			var o = new Item (x);
 			x = x.value;

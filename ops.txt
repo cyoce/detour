@@ -1,11 +1,17 @@
 
-Fibonacci (12):
-	<T>R+.
-	;\$<
+Fibonacci (9):
+<Q>S.
+;$<
+
+Fibonacci (8):
+[$<<]!S.
+
 
 Factorial (10):
 <T0 \
 .\$;p>P
+
+?1RP.
 
 Hello World (17):
 	`"Hello, World!".

@@ -606,6 +606,24 @@ function last(object, index, newval) {
 			var o = x.comp("()");
 			o.move();
 		},
+		"]": function _(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			    p = x.comp("][");
+			if (x > 0) {
+				p.move();
+			} else {
+				o.move();
+			}
+		},
+		"[": function _(x) {
+			var o;
+			if (x <= 0) {
+				o = x.comp("[]");
+			} else {
+				o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			}
+			o.move();
+		},
 		"r": function r(x, y) {
 			// range
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
