@@ -14,14 +14,14 @@ function load(){
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
 	$("#permalink").click(function(){
-		window.open(applyquery({hex:hexcompress($("#source").val())}, 'https://rawgit.com/cyoce/detour/master/interp.html'));
+		window.open(applyquery({hex:btoa($("#source").val())}, 'https://rawgit.com/cyoce/detour/master/interp.html'));
 	});
 	$("#markdown").click(function(){
 		var source = $("#source").val();
 		var out = "# [Detour](https://rawgit.com/cyoce/detour/master/interp.html), ";
 		out += source.length + " bytes\n";
 		out += ("\n" + source).replace(/\n/g, "\n    ");
-		out += "\n\n[Try it online!](" + applyquery({hex:hexcompress($('#source').val())}, 'https://rawgit.com/cyoce/detour/master/interp.html') + ")";
+		out += "\n\n[Try it online!](" + applyquery({hex:btoa($('#source').val())}, 'https://rawgit.com/cyoce/detour/master/interp.html') + ")";
 		$("#source").val(out).select();
 		document.execCommand("copy");
 		$("#source").val(source);
@@ -29,7 +29,7 @@ function load(){
 	var query = parse_query(location.href);
 	if (query) {
 		if (query.hex){
-			$("#source").val(hexdecompress(query.hex));
+			$("#source").val(atob(query.hex));
 		} else {
 			$("#source").val(query.code);
 		}
@@ -102,6 +102,8 @@ function load(){
 var preprocess = x => x;
 // $("#btn-run")
 function run (){
+	detour.start = new Date;
+	detour.ticks = 0;
 	var
 		source = $ ("#source").val(),
 		lines = source.split("\n"),
@@ -300,8 +302,10 @@ const detour = {
 			$("#stop").attr("disabled",true);
 			$("#editor").css("display","block");
 			$("#stdout").css("height", "40px");
+			console.log(detour.ticks);
 			return;
 		}
+		detour.ticks ++;
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
 		for (detour.y = 0; detour.y < detour.height; detour.y++){
@@ -321,7 +325,8 @@ const detour = {
 		} else {
 			go = false;
 		}
-		if(go) detour.timeout = setTimeout(detour.update, detour.interval);
+		detour.timeout = setTimeout(detour.update, detour.interval);
+		if (!go) detour.stop = true;
 		for (var y = 0; y < detour.height; y++){
 			for (var x = 0; x < detour.width; x++){
 				var cell = last(detour.itemgrid)[y][x]
@@ -359,7 +364,7 @@ const detour = {
 	itemgrid:[],
 	opdict: {
 		",": (x) => (alert(x),x),
-		".": (x) => (alert(x),detour.stop=true),
+		".": (x) => (detour.stop=true, /*console.log (new Date - detour.start),*/ alert(x), x),
 		":": (x) => x,
 		" ": (x) => x,
 		"<": (x) => x - 1,

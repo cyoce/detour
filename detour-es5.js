@@ -30,14 +30,14 @@ function load() {
 		$("#bytes").text(" - " + $("#source").val().length + " bytes");
 	});
 	$("#permalink").click(function () {
-		window.open(applyquery({ hex: hexcompress($("#source").val()) }, 'https://rawgit.com/cyoce/detour/master/interp.html'));
+		window.open(applyquery({ hex: btoa($("#source").val()) }, 'https://rawgit.com/cyoce/detour/master/interp.html'));
 	});
 	$("#markdown").click(function () {
 		var source = $("#source").val();
 		var out = "# [Detour](https://rawgit.com/cyoce/detour/master/interp.html), ";
 		out += source.length + " bytes\n";
 		out += ("\n" + source).replace(/\n/g, "\n    ");
-		out += "\n\n[Try it online!](" + applyquery({ hex: hexcompress($('#source').val()) }, 'https://rawgit.com/cyoce/detour/master/interp.html') + ")";
+		out += "\n\n[Try it online!](" + applyquery({ hex: btoa($('#source').val()) }, 'https://rawgit.com/cyoce/detour/master/interp.html') + ")";
 		$("#source").val(out).select();
 		document.execCommand("copy");
 		$("#source").val(source);
@@ -45,7 +45,7 @@ function load() {
 	var query = parse_query(location.href);
 	if (query) {
 		if (query.hex) {
-			$("#source").val(hexdecompress(query.hex));
+			$("#source").val(atob(query.hex));
 		} else {
 			$("#source").val(query.code);
 		}
@@ -125,6 +125,8 @@ var preprocess = function preprocess(x) {
 function run() {
 	var _last$input_y$input_x;
 
+	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).start = new Date();
+	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks = 0;
 	var source = $("#source").val(),
 	    lines = source.split("\n"),
 	    input_y,
@@ -359,8 +361,10 @@ function last(object, index, newval) {
 			$("#stop").attr("disabled", true);
 			$("#editor").css("display", "block");
 			$("#stdout").css("height", "40px");
+			console.log((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks);
 			return;
 		}
+		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks++;
 		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid.push((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(Array));
 		var table = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(),
 		    moving = false,
@@ -385,7 +389,8 @@ function last(object, index, newval) {
 		} else {
 			go = false;
 		}
-		if (go) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).timeout = setTimeout((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).update, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).interval);
+		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).timeout = setTimeout((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).update, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).interval);
+		if (!go) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true;
 		for (var y = 0; y < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height; y++) {
 			for (var x = 0; x < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width; x++) {
 				var cell = last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[y][x];
@@ -424,7 +429,7 @@ function last(object, index, newval) {
 			return alert(x), x;
 		},
 		".": function _(x) {
-			return alert(x), (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true;
+			return (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true, /*console.log (new Date - detour.start),*/alert(x), x;
 		},
 		":": function _(x) {
 			return x;
