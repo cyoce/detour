@@ -7,7 +7,7 @@
 <body>
 	<h1 class="mono">Detour: a 2D language based on redirection of data</h1>
 	<br>
-	<div id="editor">
+	<div id="editor" class='cont'>
 		<h2 class="mono"> Input </h2>
 		<input type="text" placeholder="input" id="stdin" class="mono box"/>
 		<br>
@@ -26,5 +26,8 @@
 		<br>
 	</div>
 	<h2 class="mono"> Output  <button id="stop" class='mono btn' disabled>Stop</button></h2>
-	<pre id="stdout" class="mono box full"> </pre>
+	<pre id='output' class='cont mono box'> </pre>
+	<div id='runtime' style='display:none' class='mono box full'>
+		<pre id="stdout" class="mono box full"> </pre>
+	</div>
 </body>

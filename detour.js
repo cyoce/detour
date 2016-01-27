@@ -105,8 +105,6 @@ function load(){
 var preprocess = x => x;
 // $("#btn-run")
 function run (){
-	detour.start = new Date;
-	detour.ticks = 0;
 	var
 		source = $ ("#source").val(),
 		lines = source.split("\n"),
@@ -167,12 +165,20 @@ function run (){
 	last(detour.itemgrid)[input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
 	$("#stop").attr("disabled", false);
 	$("#editor").css("display","none");
+	$("#runtime").css("display", "block");
+	$("#output").html("");
+	$("#stdout").html("");
 	$("#stdout").css("height","90%");
+	detour.start = new Date;
+	detour.ticks = 0;
+	detour.outlist = [];
+	detour.outel = $("#output");
 	if (detour.turbo){
 		detour.go = true;
 		while (detour.go){
 			detour.update();
 		}
+		$("#output").text(detour.outlist.join("\n"));
 	} else {
 		detour.__timeout__ = setInterval(detour.update, detour.interval);
 	}
@@ -368,6 +374,7 @@ var detour = {
 			$("#stop").attr("disabled",true);
 			$("#editor").css("display","block");
 			$("#stdout").css("height", "40px");
+			$("#runtime").css("display", "none");
 			console.log(detour.ticks, (new Date)-detour.start);
 			clearInterval(detour.__timeout__);
 			detour.go = false;
@@ -387,12 +394,18 @@ var detour = {
 		out += "</table>";
 		return out;
 	},
+	print(x){
+		detour.outlist.push(x);
+		if (!detour.turbo){
+			detour.outel.text(detour.outlist.join("\n"));
+		}
+	},
 	debug:true,
 	chargrid:[],
 	funcgrid:[],
 	itemgrid:[],
 	opdict: {
-		",": (x) => (alert(x.value),x),
+		",": (x) => (detour.print(x.value),x),
 		":": (x) => x,
 		" ": (x) => x,
 		"<": (x) => x - 1,
@@ -425,7 +438,7 @@ var detour = {
 	fdict:{
 		"." (x){
 			detour.stop();
-			alert(x.value);
+			detour.print(x.value);
 		},
 		"x" (x){ // remove
 
@@ -607,7 +620,7 @@ var detour = {
 			}
 		},
 		"u" (...args){ // string
-			alert(args.reverse().map (x => x.value).map (x => String.fromCharCode(x)).join(''));
+			detour.print(args.reverse().map (x => x.value).map (x => String.fromCharCode(x)).join(''));
 		}
 	},
 	reducelist:[]

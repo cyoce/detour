@@ -126,8 +126,6 @@ var preprocess = function preprocess(x) {
 function run() {
 	var _last$input_y$input_x;
 
-	detour.start = new Date();
-	detour.ticks = 0;
 	var source = $("#source").val(),
 	    lines = source.split("\n"),
 	    input_y,
@@ -199,12 +197,20 @@ function run() {
 	})));
 	$("#stop").attr("disabled", false);
 	$("#editor").css("display", "none");
+	$("#runtime").css("display", "block");
+	$("#stdout").html("");
+	$("#output").html("");
 	$("#stdout").css("height", "90%");
+	detour.start = new Date();
+	detour.ticks = 0;
+	detour.outlist = [];
+	detour.outel = $("#output");
 	if (detour.turbo) {
 		detour.go = true;
 		while (detour.go) {
 			detour.update();
 		}
+		$("#output").text(detour.outlist.join("\n"));
 	} else {
 		detour.__timeout__ = setInterval(detour.update, detour.interval);
 	}
@@ -432,6 +438,7 @@ var detour = {
 		$("#stop").attr("disabled", true);
 		$("#editor").css("display", "block");
 		$("#stdout").css("height", "40px");
+		$("#runtime").css("display", "none");
 		console.log(detour.ticks, new Date() - detour.start);
 		clearInterval(detour.__timeout__);
 		detour.go = false;
@@ -451,13 +458,19 @@ var detour = {
 		out += "</table>";
 		return out;
 	},
+	print: function print(x) {
+		detour.outlist.push(x);
+		if (!detour.turbo) {
+			detour.outel.text(detour.outlist.join("\n"));
+		}
+	},
 	debug: true,
 	chargrid: [],
 	funcgrid: [],
 	itemgrid: [],
 	opdict: {
 		",": function _(x) {
-			return alert(x.value), x;
+			return detour.print(x.value), x;
 		},
 		":": function _(x) {
 			return x;
@@ -547,7 +560,7 @@ var detour = {
 	fdict: {
 		".": function _(x) {
 			detour.stop();
-			alert(x.value);
+			detour.print(x.value);
 		},
 		"x": function x(_x) {// remove
 
@@ -766,7 +779,7 @@ var detour = {
 			}
 
 			// string
-			alert(args.reverse().map(function (x) {
+			detour.print(args.reverse().map(function (x) {
 				return x.value;
 			}).map(function (x) {
 				return String.fromCharCode(x);

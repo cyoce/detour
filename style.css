@@ -18,8 +18,9 @@
 .full {
 	width: 90%;
 }
-#editor {
+.cont {
 	width: 60%;
+	min-height:1em;
 }
 
 td {
