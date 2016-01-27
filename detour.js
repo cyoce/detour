@@ -128,6 +128,12 @@ function run (){
 		input_y = idx;
 		input_x = 0;
 	}
+	var lastln = last(lines, -1);
+	if (lastln[1] === "@"){
+		last(lines, -1, lastln[0]);
+		var ln = lastln.slice(2);
+		detour.vars = ln.split("@");
+	}
 	Item.prototype.x = input_x;
 	Item.prototype.y = input_y;
 	var max_length = lines.reduce ((x,y) => (x.length > y.length ? x : y)).length;
@@ -140,7 +146,21 @@ function run (){
 	}
 	$ ("#stdout").html(detour.table(lines))
 	detour.chargrid = lines.map (x => x.split(''));
-	detour.funcgrid = detour.chargrid.map (x => x.map (y => detour.fdict [y] || detour.fdict [' ']));
+	detour.funcgrid = detour.chargrid.map (x => x.map (y => y ===  "`" ? (s => function(x){
+		var val = eval(s);
+		if (typeof val === "string"){
+			val = val.split('').reverse().join('');
+			for (var i = val.length;i--;){
+				var o = new Item (x);
+				o.value = val.charCodeAt(i);
+				o.move();
+			}
+		} else {
+			var o = new Item (x);
+			o.value = val;
+			o.move();
+		}
+	})(detour.vars.shift()) : detour.fdict [y] || detour.fdict [' ']));
 	detour.width = detour.chargrid [0].length;
 	detour.height = detour.chargrid.length;
 	detour.itemgrid = [detour.newgrid(Array)];
@@ -585,6 +605,9 @@ var detour = {
 			} else {
 				o.move(1);
 			}
+		},
+		"u" (...args){ // string
+			alert(args.reverse().map (x => x.value).map (x => String.fromCharCode(x)).join(''));
 		}
 	},
 	reducelist:[]

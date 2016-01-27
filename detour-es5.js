@@ -148,6 +148,12 @@ function run() {
 		input_y = idx;
 		input_x = 0;
 	}
+	var lastln = last(lines, -1);
+	if (lastln[1] === "@") {
+		last(lines, -1, lastln[0]);
+		var ln = lastln.slice(2);
+		detour.vars = ln.split("@");
+	}
 	(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.x = input_x;
 	(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.y = input_y;
 	var max_length = lines.reduce(function (x, y) {
@@ -166,7 +172,23 @@ function run() {
 	});
 	detour.funcgrid = detour.chargrid.map(function (x) {
 		return x.map(function (y) {
-			return detour.fdict[y] || detour.fdict[' '];
+			return y === "`" ? (function (s) {
+				return function (x) {
+					var val = eval(s);
+					if (typeof val === "string") {
+						val = val.split('').reverse().join('');
+						for (var i = val.length; i--;) {
+							var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+							o.value = val.charCodeAt(i);
+							o.move();
+						}
+					} else {
+						var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+						o.value = val;
+						o.move();
+					}
+				};
+			})(detour.vars.shift()) : detour.fdict[y] || detour.fdict[' '];
 		});
 	});
 	detour.width = detour.chargrid[0].length;
@@ -737,6 +759,18 @@ var detour = {
 			} else {
 				o.move(1);
 			}
+		},
+		"u": function u() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			// string
+			alert(args.reverse().map(function (x) {
+				return x.value;
+			}).map(function (x) {
+				return String.fromCharCode(x);
+			}).join(''));
 		}
 	},
 	reducelist: []
