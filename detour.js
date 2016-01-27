@@ -518,6 +518,25 @@ var detour = {
 				obj.move();
 			}
 		},
+		"R"  (x){ // range
+			var o = new Item (x),y;
+			y = x.value;
+			x = 1;
+			var swap, out = [];
+			if (x > y){
+				var t = x;
+				x = y;
+				y = t;
+				swap = true;
+			}
+			while (x <= y) out.push(x++);
+			if (!swap) out.reverse();
+			for (var i = 0; i < out.length; i++){
+				var obj = new Item (o);
+				obj.value = out[i];
+				obj.move();
+			}
+		},
 		"s" (x,y){ // swap
 			var o = new Item (x), p = new Item (y);
 			o.move();
@@ -557,7 +576,7 @@ var detour = {
 				o.move();
 			}
 		},
-		"R" (x,y){ // reduce
+		"F" (x,y){ // reduce
 			var o = new Item (x), p = new Item (x);
 			if (arguments.length > 1){
 				o._move();

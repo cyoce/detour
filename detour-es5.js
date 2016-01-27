@@ -655,6 +655,28 @@ var detour = {
 				obj.move();
 			}
 		},
+		"R": function R(x) {
+			// range
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			    y;
+			y = x.value;
+			x = 1;
+			var swap,
+			    out = [];
+			if (x > y) {
+				var t = x;
+				x = y;
+				y = t;
+				swap = true;
+			}
+			while (x <= y) out.push(x++);
+			if (!swap) out.reverse();
+			for (var i = 0; i < out.length; i++) {
+				var obj = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+				obj.value = out[i];
+				obj.move();
+			}
+		},
 		"s": function s(x, y) {
 			// swap
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
@@ -704,7 +726,7 @@ var detour = {
 				o.move();
 			}
 		},
-		"R": function R(x, y) {
+		"F": function F(x, y) {
 			// reduce
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
