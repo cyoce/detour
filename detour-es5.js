@@ -285,7 +285,7 @@ Item = (function () {
 	}, {
 		key: "toString",
 		value: function toString() {
-			return String(this.value) + ">V<^"[this.dir];
+			return String(this.value) + ">^<V"[this.dir];
 		}
 	}, {
 		key: "valueOf",
@@ -556,8 +556,8 @@ var detour = {
 			// mirror
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
-			o.vx = -o.vy;
-			o.vy = -temp;
+			o.vx = o.vy;
+			o.vy = temp;
 			o.move();
 		},
 		"/": function _(x) {

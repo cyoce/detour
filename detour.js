@@ -238,7 +238,7 @@ class Item {
 		return new Item(o);
 	}
 	toString(){
-		return String(this.value) + ">V<^" [this.dir];
+		return String(this.value) + ">^<V" [this.dir];
 	}
 	valueOf(){
 		return this.value;
@@ -432,8 +432,8 @@ var detour = {
 		},
 		"\\" (x){ // mirror
 			var o = new Item (x), temp = o.vx;
-			o.vx = -o.vy;
-			o.vy = -temp;
+			o.vx = o.vy;
+			o.vy = temp;
 			o.move();
 		},
 		"/" (x){ // mirror
