@@ -198,8 +198,8 @@ function run() {
 	$("#stop").attr("disabled", false);
 	$("#editor").css("display", "none");
 	$("#runtime").css("display", "block");
-	$("#stdout").html("");
 	$("#output").html("");
+	$("#stdout").html("");
 	$("#stdout").css("height", "90%");
 	detour.start = new Date();
 	detour.ticks = 0;
@@ -462,6 +462,7 @@ var detour = {
 		detour.outlist.push(x);
 		if (!detour.turbo) {
 			detour.outel.text(detour.outlist.join("\n"));
+			detour.outel[0].scrollTop = detour.outel[0].scrollHeight;
 		}
 	},
 	debug: true,
@@ -470,7 +471,7 @@ var detour = {
 	itemgrid: [],
 	opdict: {
 		",": function _(x) {
-			return detour.print(x.value), x;
+			return detour.print(x), x;
 		},
 		":": function _(x) {
 			return x;
@@ -569,8 +570,8 @@ var detour = {
 			// mirror
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
 			    temp = o.vx;
-			o.vx = -o.vy;
-			o.vy = -temp;
+			o.vx = o.vy;
+			o.vy = temp;
 			o.move();
 		},
 		"/": function _(x) {
@@ -637,6 +638,16 @@ var detour = {
 		"q": function q(x) {
 			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 			o.dir = 2;
+			o.move();
+		},
+		"v": function v(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 3;
+			o.move();
+		},
+		"^": function _(x) {
+			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			o.dir = 1;
 			o.move();
 		},
 		"{": function _(x) {

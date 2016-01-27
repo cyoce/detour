@@ -398,6 +398,7 @@ var detour = {
 		detour.outlist.push(x);
 		if (!detour.turbo){
 			detour.outel.text(detour.outlist.join("\n"));
+			detour.outel[0].scrollTop = detour.outel[0].scrollHeight;
 		}
 	},
 	debug:true,
@@ -405,7 +406,7 @@ var detour = {
 	funcgrid:[],
 	itemgrid:[],
 	opdict: {
-		",": (x) => (detour.print(x.value),x),
+		",": (x) => (detour.print(x),x),
 		":": (x) => x,
 		" ": (x) => x,
 		"<": (x) => x - 1,
@@ -445,8 +446,8 @@ var detour = {
 		},
 		"\\" (x){ // mirror
 			var o = new Item (x), temp = o.vx;
-			o.vx = -o.vy;
-			o.vy = -temp;
+			o.vx = o.vy;
+			o.vy = temp;
 			o.move();
 		},
 		"/" (x){ // mirror
@@ -504,6 +505,16 @@ var detour = {
 		"q" (x){
 			var o = new Item(x);
 			o.dir = 2;
+			o.move();
+		},
+		"v" (x){
+			var o = new Item (x);
+			o.dir = 3;
+			o.move();
+		},
+		"^" (x){
+			var o = new Item (x);
+			o.dir = 1;
 			o.move();
 		},
 		"{" (x){ // dupe
