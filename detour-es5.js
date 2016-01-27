@@ -6,8 +6,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 var Item = _temporalUndefined;
 
-var detour = _temporalUndefined;
-
 function _temporalAssertDefined(val, name, undef) { if (val === undef) { throw new ReferenceError(name + " is not defined - temporal dead zone"); } return true; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
@@ -20,10 +18,10 @@ $(document).ready(load);
 function load() {
 	$("#btn-run").click(run);
 	$("#stop").click(function () {
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true;
+		detour.stop();
 	});
 	$("#interval").change(function () {
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).interval = this.value;
+		detour.interval = this.value;
 		$("#show-interval").text(this.value);
 	});
 	setInterval(function () {
@@ -41,6 +39,9 @@ function load() {
 		$("#source").val(out).select();
 		document.execCommand("copy");
 		$("#source").val(source);
+	});
+	$("#turbo").change(function () {
+		detour.turbo = this.checked;
 	});
 	var query = parse_query(location.href);
 	if (query) {
@@ -125,8 +126,8 @@ var preprocess = function preprocess(x) {
 function run() {
 	var _last$input_y$input_x;
 
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).start = new Date();
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks = 0;
+	detour.start = new Date();
+	detour.ticks = 0;
 	var source = $("#source").val(),
 	    lines = source.split("\n"),
 	    input_y,
@@ -159,26 +160,32 @@ function run() {
 			lines[i] += ' '.repeat(max_length - line.length);
 		}
 	}
-	$("#stdout").html((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).table(lines));
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid = lines.map(function (x) {
+	$("#stdout").html(detour.table(lines));
+	detour.chargrid = lines.map(function (x) {
 		return x.split('');
 	});
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).funcgrid = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid.map(function (x) {
+	detour.funcgrid = detour.chargrid.map(function (x) {
 		return x.map(function (y) {
-			return (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[y] || (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[' '];
+			return detour.fdict[y] || detour.fdict[' '];
 		});
 	});
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[0].length;
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid.length;
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid = [(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(Array)];
-	(_last$input_y$input_x = last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[input_y][input_x]).push.apply(_last$input_y$input_x, _toConsumableArray($("#stdin").val().split(" ").map(Number).map(function (x) {
+	detour.width = detour.chargrid[0].length;
+	detour.height = detour.chargrid.length;
+	detour.itemgrid = [detour.newgrid(Array)];
+	(_last$input_y$input_x = last(detour.itemgrid)[input_y][input_x]).push.apply(_last$input_y$input_x, _toConsumableArray($("#stdin").val().split(" ").map(Number).map(function (x) {
 		return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 	})));
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = false;
 	$("#stop").attr("disabled", false);
 	$("#editor").css("display", "none");
 	$("#stdout").css("height", "90%");
-	(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).update();
+	if (detour.turbo) {
+		detour.go = true;
+		while (detour.go) {
+			detour.update();
+		}
+	} else {
+		detour.__timeout__ = setInterval(detour.update, detour.interval);
+	}
 }
 function genmatrix(chars) {}
 
@@ -211,13 +218,13 @@ Item = (function () {
 			if (~x) do {
 				this._move();
 			} while (x--);
-			last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[this.y][this.x].unshift(this);
+			last(detour.itemgrid)[this.y][this.x].unshift(this);
 		}
 	}, {
 		key: "_move",
 		value: function _move() {
-			this.x = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict.m(this.x + this.vx, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width);
-			this.y = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict.m(this.y + this.vy, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height);
+			this.x = detour.opdict.m(this.x + this.vx, detour.width);
+			this.y = detour.opdict.m(this.y + this.vy, detour.height);
 		}
 	}, {
 		key: "comp",
@@ -227,7 +234,7 @@ Item = (function () {
 			o.vals = [];
 			while (i) {
 				o._move();
-				var char = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x];
+				var char = detour.chargrid[o.y][o.x];
 				if (char === chars[0]) {
 					i++;
 				} else if (char === chars[1]) {
@@ -235,7 +242,7 @@ Item = (function () {
 				} else {
 					var _o$vals;
 
-					(_o$vals = o.vals).push.apply(_o$vals, _toConsumableArray(last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[o.y][o.x].concat(last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid, -2)) || []));
+					(_o$vals = o.vals).push.apply(_o$vals, _toConsumableArray(last(detour.itemgrid)[o.y][o.x].concat(last(detour.itemgrid, -2)) || []));
 				}
 			}
 			return o;
@@ -266,7 +273,7 @@ Item = (function () {
 	}, {
 		key: "dir",
 		set: function set(val) {
-			val = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict.m(val, 4);
+			val = detour.opdict.m(val, 4);
 			var xy = [- ~val % 2, val % 2].map(function (n) {
 				return n * Math.sign((Math.abs(val - 1.5) | 0) * 2 - 1);
 			});
@@ -303,16 +310,16 @@ Item = (function () {
 (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.other = [];
 
 function setup() {
-	for (var i in (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict) {
-		var func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[i];
-		if (func.length === 1) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[i] = (function (f) {
+	for (var i in detour.opdict) {
+		var func = detour.opdict[i];
+		if (func.length === 1) detour.fdict[i] = (function (f) {
 			return function (x) {
 				var o = Object.create(x);
 				o.value = f(o.value);
 				o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
 				o.move();
 			};
-		})(func);else (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[i] = (function (f) {
+		})(func);else detour.fdict[i] = (function (f) {
 			return function (x, y) {
 				// console.log(x,y);
 				x = x || new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)();
@@ -322,9 +329,9 @@ function setup() {
 			};
 		})(func);
 	}
-	for (var i in (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers) {
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fdict[i] = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers[i];
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducelist.push((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducers[i]);
+	for (var i in detour.reducers) {
+		detour.fdict[i] = detour.reducers[i];
+		detour.reducelist.push(detour.reducers[i]);
 	}
 }
 
@@ -338,18 +345,20 @@ function last(object, index, newval) {
 	if (arguments.length < 2) {
 		index = -1;
 	}
-	idx = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict.m(index, object.length);
+	idx = detour.opdict.m(index, object.length);
 	if (arguments.length < 3) {
 		return object[idx];
 	} else {
 		return object[idx] = newval;
 	}
-}detour = {
+}
+
+var detour = {
 	newgrid: function newgrid(item) {
 		item = item || ret();
-		var out = Array((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height);
+		var out = Array(detour.height);
 		for (var y = 0; y < out.length; y++) {
-			out[y] = Array((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width);
+			out[y] = Array(detour.width);
 			for (var x = 0; x < out[y].length; x++) {
 				out[y][x] = item();
 			}
@@ -357,53 +366,53 @@ function last(object, index, newval) {
 		return out;
 	},
 	update: function update() {
-		if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop) {
-			$("#stop").attr("disabled", true);
-			$("#editor").css("display", "block");
-			$("#stdout").css("height", "40px");
-			console.log((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks);
-			return;
-		}
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).ticks++;
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid.push((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(Array));
-		var table = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).newgrid(),
+		detour.ticks++;
+		detour.itemgrid.push(detour.newgrid(Array));
+		var table = detour.newgrid(),
 		    moving = false,
-		    items = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid.slice(-2)[0],
+		    items = detour.itemgrid.slice(-2)[0],
 		    reducers = [];
-		for ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y = 0; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y++) {
-			for ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x = 0; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width; (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x++) {
-				var args = items[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x],
-				    func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).funcgrid[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y][(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x];
-				while (args.length >= func.length && func.length) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args), moving = true;
-				if (~(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).reducelist.indexOf(func) && args.length) reducers.push([(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).x, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).y, window.__args = args, func]);
+		for (detour.y = 0; detour.y < detour.height; detour.y++) {
+			for (detour.x = 0; detour.x < detour.width; detour.x++) {
+				var args = items[detour.y][detour.x],
+				    func = detour.funcgrid[detour.y][detour.x];
+				while (args.length >= func.length && func.length) detour.run(func, args), moving = true;
+				if (~detour.reducelist.indexOf(func) && args.length) reducers.push([detour.x, detour.y, window.__args = args, func]);
 			}
 		}
-		var go = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).fast || confirm("moving");
+		var go = detour.fast || confirm("moving");
 		if (moving) {} else if (reducers.length) {
 			var reducer = reducers[0],
 			    x = reducer[0],
 			    y = reducer[1],
 			    args = reducer[2],
 			    func = reducer[3];
-			(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).run(func, args, true);
+			detour.run(func, args, true);
 		} else {
 			go = false;
 		}
-		(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).timeout = setTimeout((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).update, (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).interval);
-		if (!go) (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true;
-		for (var y = 0; y < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).height; y++) {
-			for (var x = 0; x < (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).width; x++) {
-				var cell = last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid)[y][x];
-				cell.splice.apply(cell, [0, 0].concat(_toConsumableArray(last((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).itemgrid, -2)[y][x])));
-				if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).debug) table[y][x] = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[y][x] + "<br> " + cell.join(' ');
+		if (!go) detour.stop();
+		for (var y = 0; y < detour.height; y++) {
+			for (var x = 0; x < detour.width; x++) {
+				var cell = last(detour.itemgrid)[y][x];
+				cell.splice.apply(cell, [0, 0].concat(_toConsumableArray(last(detour.itemgrid, -2)[y][x])));
+				if (detour.debug) table[y][x] = detour.chargrid[y][x] + "<br> " + cell.join(' ');
 			}
 		}
-		if ((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).debug) $("#stdout").html((_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).table(table));
+		if (detour.debug) $("#stdout").html(detour.table(table));
 	},
 	interval: 350,
 	fast: true,
 	run: function run(func, args) {
 		func.apply(undefined, _toConsumableArray(args.splice(-func.length)));
+	},
+	stop: function stop() {
+		$("#stop").attr("disabled", true);
+		$("#editor").css("display", "block");
+		$("#stdout").css("height", "40px");
+		console.log(detour.ticks, new Date() - detour.start);
+		clearInterval(detour.__timeout__);
+		detour.go = false;
 	},
 	table: function table(grid) {
 		var out = "<table class='full' height='90%'><tr>";
@@ -426,10 +435,7 @@ function last(object, index, newval) {
 	itemgrid: [],
 	opdict: {
 		",": function _(x) {
-			return alert(x), x;
-		},
-		".": function _(x) {
-			return (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).stop = true, /*console.log (new Date - detour.start),*/alert(x), x;
+			return alert(x.value), x;
 		},
 		":": function _(x) {
 			return x;
@@ -517,6 +523,9 @@ function last(object, index, newval) {
 		}
 	},
 	fdict: {
+		".": function _(x) {
+			alert(x.value);
+		},
 		"x": function x(_x) {// remove
 
 		},
@@ -666,7 +675,7 @@ function last(object, index, newval) {
 			o._move();
 			var p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]);
 			// if (args.length%2) args.push((new Item(0)).concat(p))
-			var func = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x]];
+			var func = detour.opdict[detour.chargrid[o.y][o.x]];
 			if (args.length % 2) x = args.pop();
 			p.value = args.reduce(func);
 			if (typeof x !== "undefined") {
@@ -700,7 +709,7 @@ function last(object, index, newval) {
 			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 			if (arguments.length > 1) {
 				o._move();
-				p.value = (_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).opdict[(_temporalAssertDefined(detour, "detour", _temporalUndefined) && detour).chargrid[o.y][o.x]](x.value, y.value);
+				p.value = detour.opdict[detour.chargrid[o.y][o.x]](x.value, y.value);
 				p.move(-1);
 			} else {
 				o.move(1);

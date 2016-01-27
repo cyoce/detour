@@ -4,7 +4,7 @@ $ (document).ready (load);
 function load(){
 	$ ("#btn-run").click (run);
 	$ ("#stop").click(function(){
-		detour.stop = true;
+		detour.stop();
 	});
 	$ ("#interval").change(function (){
 		detour.interval = this.value;
@@ -25,7 +25,10 @@ function load(){
 		$("#source").val(out).select();
 		document.execCommand("copy");
 		$("#source").val(source);
-	})
+	});
+	$("#turbo").change(function(){
+		detour.turbo = this.checked;
+	});
 	var query = parse_query(location.href);
 	if (query) {
 		if (query.hex){
@@ -142,11 +145,17 @@ function run (){
 	detour.height = detour.chargrid.length;
 	detour.itemgrid = [detour.newgrid(Array)];
 	last(detour.itemgrid)[input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
-	detour.stop = false;
 	$("#stop").attr("disabled", false);
 	$("#editor").css("display","none");
 	$("#stdout").css("height","90%");
-	detour.update();
+	if (detour.turbo){
+		detour.go = true;
+		while (detour.go){
+			detour.update();
+		}
+	} else {
+		detour.__timeout__ = setInterval(detour.update, detour.interval);
+	}
 }
 function genmatrix (chars){
 
@@ -285,7 +294,7 @@ function last (object, index, newval){
 
 
 
-const detour = {
+var detour = {
 	newgrid (item){
 		item = item || ret();
 		var out = Array(detour.height);
@@ -298,13 +307,6 @@ const detour = {
 		return out;
 	},
 	update (){
-		if (detour.stop){
-			$("#stop").attr("disabled",true);
-			$("#editor").css("display","block");
-			$("#stdout").css("height", "40px");
-			console.log(detour.ticks);
-			return;
-		}
 		detour.ticks ++;
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
@@ -325,8 +327,7 @@ const detour = {
 		} else {
 			go = false;
 		}
-		detour.timeout = setTimeout(detour.update, detour.interval);
-		if (!go) detour.stop = true;
+		if (!go) detour.stop();
 		for (var y = 0; y < detour.height; y++){
 			for (var x = 0; x < detour.width; x++){
 				var cell = last(detour.itemgrid)[y][x]
@@ -342,6 +343,14 @@ const detour = {
 	fast:true,
 	run (func, args){
 		func (...args.splice(-func.length));
+	},
+	stop(){
+			$("#stop").attr("disabled",true);
+			$("#editor").css("display","block");
+			$("#stdout").css("height", "40px");
+			console.log(detour.ticks, (new Date)-detour.start);
+			clearInterval(detour.__timeout__);
+			detour.go = false;
 	},
 	table (grid){
 		var out = "<table class='full' height='90%'><tr>";
@@ -363,8 +372,7 @@ const detour = {
 	funcgrid:[],
 	itemgrid:[],
 	opdict: {
-		",": (x) => (alert(x),x),
-		".": (x) => (detour.stop=true, /*console.log (new Date - detour.start),*/ alert(x), x),
+		",": (x) => (alert(x.value),x),
 		":": (x) => x,
 		" ": (x) => x,
 		"<": (x) => x - 1,
@@ -395,6 +403,9 @@ const detour = {
 		"9": (x) => 9,
 	},
 	fdict:{
+		"." (x){
+			alert(x.value);
+		},
 		"x" (x){ // remove
 
 		},

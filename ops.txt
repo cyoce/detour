@@ -8,8 +8,8 @@ Fibonacci (8):
 
 
 Factorial (10):
-<T0 \
-.\$;p>P
+<Q0\
+.$;p>P
 
 ?1RP.
 
