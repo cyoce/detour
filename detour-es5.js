@@ -524,6 +524,7 @@ var detour = {
 	},
 	fdict: {
 		".": function _(x) {
+			detour.stop();
 			alert(x.value);
 		},
 		"x": function x(_x) {// remove

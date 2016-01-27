@@ -404,6 +404,7 @@ var detour = {
 	},
 	fdict:{
 		"." (x){
+			detour.stop();
 			alert(x.value);
 		},
 		"x" (x){ // remove
