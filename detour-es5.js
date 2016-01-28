@@ -397,7 +397,7 @@ var detour = {
 		detour.ticks++;
 		if (!detour.turbo) {
 			$("#ticks").text(String(detour.ticks) + " tick" + (detour.ticks === 1 ? "" : "s"));
-			$("#time").text(String(new Date() - detour.start));
+			$("#time").text(String(Math.floor((new Date() - detour.start) / 100) / 10));
 		}
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(),
@@ -431,7 +431,8 @@ var detour = {
 				if (detour.debug) table[y][x] = detour.chargrid[y][x] + "<br> " + cell.join(' ');
 			}
 		}
-		if (detour.debug) $("#stdout").html(detour.table(table));
+		if (detour.debug && !detour.turbo) $("#stdout").html(detour.table(table));
+		if (detour.itemgrid.length > 20) detour.itemgrid.shift();
 	},
 	interval: 350,
 	fast: true,
@@ -446,6 +447,8 @@ var detour = {
 		console.log(detour.ticks, new Date() - detour.start);
 		clearInterval(detour.__timeout__);
 		detour.go = false;
+		$("#ticks").text(String(detour.ticks) + " tick" + (detour.ticks === 1 ? "" : "s"));
+		$("#time").text(String(Math.floor((new Date() - detour.start) / 100) / 10));
 	},
 	table: function table(grid) {
 		var out = "<table class='full' class='vert'><tr>";
@@ -500,6 +503,12 @@ var detour = {
 		},
 		"V": function V(x) {
 			return Math.sqrt(x);
+		},
+		"f": function f(x) {
+			return Math.floor(x);
+		},
+		"c": function c(x) {
+			return Math.ceil(x);
 		},
 		"-": function _(x, y) {
 			return x - y;

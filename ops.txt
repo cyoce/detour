@@ -65,13 +65,13 @@ data flow:
 	/ bounce
 	p point right
 	q point left
-	A point up
-	V point down
+	^ point up
+	v point down
 	% toggling bounce
 
 loops:
-	[] reduce loop
-	() while loop
+	() skip
+	[] while loop
 	{} duplicate loop
 
 I/O:
