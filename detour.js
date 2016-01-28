@@ -244,7 +244,7 @@ class Item {
 		return new Item(o);
 	}
 	toString(){
-		return String(this.value) + ">V<^" [this.dir];
+		return String(this.value) + ">^<V" [this.dir];
 	}
 	valueOf(){
 		return this.value;

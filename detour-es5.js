@@ -291,7 +291,7 @@ Item = (function () {
 	}, {
 		key: "toString",
 		value: function toString() {
-			return String(this.value) + ">V<^"[this.dir];
+			return String(this.value) + ">^<V"[this.dir];
 		}
 	}, {
 		key: "valueOf",
