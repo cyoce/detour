@@ -291,7 +291,7 @@ Item = (function () {
 	}, {
 		key: "toString",
 		value: function toString() {
-			return String(this.value) + ">^<V"[this.dir];
+			return String(this.value) + ">V<^"[this.dir];
 		}
 	}, {
 		key: "valueOf",
@@ -510,6 +510,12 @@ var detour = {
 		"c": function c(x) {
 			return Math.ceil(x);
 		},
+		"d": function d(x) {
+			return x / 2;
+		},
+		"D": function D(x) {
+			return x * 2;
+		},
 		"-": function _(x, y) {
 			return x - y;
 		},
@@ -572,6 +578,12 @@ var detour = {
 		},
 		"9": function _(x) {
 			return 9;
+		},
+		"G": function G(x) {
+			return detour.register || 0;
+		},
+		"g": function g(x) {
+			return detour.register = x;
 		}
 	},
 	fdict: {

@@ -6,6 +6,10 @@ Fibonacci (9):
 Fibonacci (8):
 [$<<]!S.
 
+Fibonacci (36), O(1) - 23 ticks:
+$v{5V>d}se( )Q
+ p{1{5V}-d}se-{5V}_c.
+
 Fibonacci sequence (20):
 v1vq:$
   $+

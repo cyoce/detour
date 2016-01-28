@@ -244,7 +244,7 @@ class Item {
 		return new Item(o);
 	}
 	toString(){
-		return String(this.value) + ">^<V" [this.dir];
+		return String(this.value) + ">V<^" [this.dir];
 	}
 	valueOf(){
 		return this.value;
@@ -423,6 +423,8 @@ var detour = {
 		"V": (x) => Math.sqrt(x),
 		"f": (x) => Math.floor(x),
 		"c": (x) => Math.ceil(x),
+		"d": (x) => x / 2,
+		"D": (x) => x * 2,
 		"-": (x,y) => x - y,
 		"+": (x,y) => x + y,
 		"*": (x,y) => x * y,
@@ -444,6 +446,8 @@ var detour = {
 		"7": (x) => 7,
 		"8": (x) => 8,
 		"9": (x) => 9,
+		"G": (x) => detour.register || 0,
+		"g": (x) => detour.register = x,
 	},
 	fdict:{
 		"." (x){
