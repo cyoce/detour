@@ -106,7 +106,7 @@ var preprocess = x => x;
 // $("#btn-run")
 function run (){
 	var
-		source = $ ("#source").val(),
+		source = $ ("#source").val().replace(/\s*#.*$/gm,""),
 		lines = source.split("\n"),
 		input_y,
 		input_x;
@@ -164,8 +164,8 @@ function run (){
 	detour.itemgrid = [detour.newgrid(Array)];
 	last(detour.itemgrid)[input_y][input_x].push(...$("#stdin").val().split(" ").map(Number).map(x=>new Item(x)))
 	$("#stop").attr("disabled", false);
-	$("#editor").css("display","none");
-	$("#runtime").css("display", "block");
+	$(".editor").css("display","none");
+	$(".runtime").css("display", "block");
 	$("#output").html("");
 	$("#stdout").html("");
 	$("#stdout").css("height","90%");
@@ -333,7 +333,11 @@ var detour = {
 		return out;
 	},
 	update (){
-		detour.ticks ++;
+		detour.ticks++;
+		if (!detour.turbo){
+			$("#ticks").text(String(detour.ticks) + " tick" + (detour.ticks === 1 ? "" : "s"));
+			$("#time").text(String(new Date - detour.start));
+		}
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(), moving=false, items=detour.itemgrid.slice(-2)[0], reducers = [];
 		for (detour.y = 0; detour.y < detour.height; detour.y++){
@@ -372,15 +376,15 @@ var detour = {
 	},
 	stop(){
 			$("#stop").attr("disabled",true);
-			$("#editor").css("display","block");
+			$(".editor").css("display","block");
 			$("#stdout").css("height", "40px");
-			$("#runtime").css("display", "none");
+			$(".runtime").css("display", "none");
 			console.log(detour.ticks, (new Date)-detour.start);
 			clearInterval(detour.__timeout__);
 			detour.go = false;
 	},
 	table (grid){
-		var out = "<table class='full' height='90%'><tr>";
+		var out = "<table class='full' class='vert'><tr>";
 		for (var i = 0; i < grid.length; i++){
 			out += "\t<tr height='" + String(100/grid.length) + "%'>\n";
 			var array = grid [i];
@@ -414,6 +418,7 @@ var detour = {
 		"!": (x) => -x,
 		"n": (x) => !x,
 		"N": (x) => ~x,
+		"V": (x) => Math.sqrt(x),
 		"-": (x,y) => x - y,
 		"+": (x,y) => x + y,
 		"*": (x,y) => x * y,

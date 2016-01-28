@@ -19,6 +19,7 @@
 	overflow-y: scroll;
 }
 
+
 .full {
 	width: 90%;
 }
@@ -35,4 +36,7 @@ td {
 
 tr {
 	width:100%;
+}
+.vert {
+	height:100%;
 }

@@ -5,9 +5,11 @@
 	<script type='text/javascript' src='detour-es5.js'></script>
 </head>
 <body>
-	<h1 class="mono">Detour: a 2D language based on redirection of data</h1>
-	<br>
-	<div id="editor" class='cont'>
+	<h1 class="mono editor">
+		Detour: a 2D language based on redirection of data
+		<br>
+	</h1>
+	<div class='cont editor'>
 		<h2 class="mono"> Input </h2>
 		<input type="text" placeholder="input" id="stdin" class="mono box"/>
 		<br>
@@ -21,13 +23,18 @@
 		<span class='mono'>Turbo mode?</span><input class='mono' type='checkbox' id='turbo'/>
 		<br>
 		<br>
-		<textarea id="source" class="mono box full"></textarea>
+		<textarea id="source" class="mono box full dyn"></textarea>
 		<br>
 		<br>
 	</div>
-	<h2 class="mono"> Output  <button id="stop" class='mono btn' disabled>Stop</button></h2>
+	<h2 class="mono">
+		Output
+		<button id="stop" class='mono btn' disabled>Stop</button>&nbsp;
+		<span id='ticks' class='mono'></span>&nbsp;
+		<span id='time' class='mono'></span>
+	</h2>
 	<pre id='output' class='cont mono box'> </pre>
-	<div id='runtime' style='display:none' class='mono box full'>
+	<div style='display:none; height:60%' class='mono box full runtime'>
 		<pre id="stdout" class="mono box full"> </pre>
 	</div>
 </body>

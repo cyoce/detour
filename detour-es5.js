@@ -126,7 +126,7 @@ var preprocess = function preprocess(x) {
 function run() {
 	var _last$input_y$input_x;
 
-	var source = $("#source").val(),
+	var source = $("#source").val().replace(/\s*#.*$/gm, ""),
 	    lines = source.split("\n"),
 	    input_y,
 	    input_x;
@@ -196,8 +196,8 @@ function run() {
 		return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
 	})));
 	$("#stop").attr("disabled", false);
-	$("#editor").css("display", "none");
-	$("#runtime").css("display", "block");
+	$(".editor").css("display", "none");
+	$(".runtime").css("display", "block");
 	$("#output").html("");
 	$("#stdout").html("");
 	$("#stdout").css("height", "90%");
@@ -395,6 +395,10 @@ var detour = {
 	},
 	update: function update() {
 		detour.ticks++;
+		if (!detour.turbo) {
+			$("#ticks").text(String(detour.ticks) + " tick" + (detour.ticks === 1 ? "" : "s"));
+			$("#time").text(String(new Date() - detour.start));
+		}
 		detour.itemgrid.push(detour.newgrid(Array));
 		var table = detour.newgrid(),
 		    moving = false,
@@ -436,15 +440,15 @@ var detour = {
 	},
 	stop: function stop() {
 		$("#stop").attr("disabled", true);
-		$("#editor").css("display", "block");
+		$(".editor").css("display", "block");
 		$("#stdout").css("height", "40px");
-		$("#runtime").css("display", "none");
+		$(".runtime").css("display", "none");
 		console.log(detour.ticks, new Date() - detour.start);
 		clearInterval(detour.__timeout__);
 		detour.go = false;
 	},
 	table: function table(grid) {
-		var out = "<table class='full' height='90%'><tr>";
+		var out = "<table class='full' class='vert'><tr>";
 		for (var i = 0; i < grid.length; i++) {
 			out += "\t<tr height='" + String(100 / grid.length) + "%'>\n";
 			var array = grid[i];
@@ -493,6 +497,9 @@ var detour = {
 		},
 		"N": function N(x) {
 			return ~x;
+		},
+		"V": function V(x) {
+			return Math.sqrt(x);
 		},
 		"-": function _(x, y) {
 			return x - y;

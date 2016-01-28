@@ -6,27 +6,38 @@ Fibonacci (9):
 Fibonacci (8):
 [$<<]!S.
 
+Fibonacci sequence (20):
+v1vq:$
+  $+
+p,p^
+^ q
 
 Factorial (10):
 <Q0\
 .$;p>P
 
 ?1[$Q<]x
-    P.
+   .P
 
 ?1RP.
 
-Hello World (17):
-	`"Hello, World!".
+Factorial sequence
+1,,[$v> ]
+  (,*q)
+
+Hello World (19):
+`u
+@"Hello, World!"
 
 Truth Machine (2):
-	~,
+~,
 
 Sum 1..n:
 ?x$\S.
  ;</
 
-
+[$Q<]
+.S
 Math:
 	+ Add
 	> Add 1
