@@ -126,10 +126,10 @@ function run (){
 		input_y = idx;
 		input_x = 0;
 	}
-	var lastln = last(lines, -1);
-	if (lastln[1] === "@"){
+	var lastln = last(lines, -1).replace(/^\s+/, '');
+	if (lastln[0] === "@"){
 		last(lines, -1, lastln[0]);
-		var ln = lastln.slice(2);
+		var ln = lastln.slice(1);
 		detour.vars = ln.split("@");
 	}
 	Item.prototype.x = input_x;
