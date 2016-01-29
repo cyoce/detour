@@ -598,7 +598,17 @@ var detour = {
 			var o = new Item (x), p = new Item (y);
 			o.move();
 			p.move();
-		}
+		},
+		get "%" (){
+			var sign = 1;
+			return function (x){
+				var o = new Item (x), temp = o.vx;
+				o.vx = sign * o.vy;
+				o.vy = sign * temp;
+				o.move();
+				sign *= -1;
+			}
+		},
 	},
 	reducers:{
 		"L" (...args){ // reduce left

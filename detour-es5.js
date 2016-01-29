@@ -586,7 +586,7 @@ var detour = {
 			return detour.register = x;
 		}
 	},
-	fdict: {
+	fdict: Object.defineProperties({
 		".": function _(x) {
 			detour.stop();
 			detour.print(x.value);
@@ -758,7 +758,23 @@ var detour = {
 			o.move();
 			p.move();
 		}
-	},
+	}, {
+		"%": {
+			get: function get() {
+				var sign = 1;
+				return function (x) {
+					var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+					    temp = o.vx;
+					o.vx = sign * o.vy;
+					o.vy = sign * temp;
+					o.move();
+					sign *= -1;
+				};
+			},
+			configurable: true,
+			enumerable: true
+		}
+	}),
 	reducers: {
 		"L": function L() {
 			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
