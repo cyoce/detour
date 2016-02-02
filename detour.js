@@ -386,7 +386,7 @@ var detour = {
 
 	},
 	table (grid){
-		var out = "<table class='full' class='vert'><tr>";
+		var out = "<table class='full vert'><tr>";
 		for (var i = 0; i < grid.length; i++){
 			out += "\t<tr height='" + String(100/grid.length) + "%'>\n";
 			var array = grid [i];
