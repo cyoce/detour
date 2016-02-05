@@ -3,7 +3,9 @@ var fs = require('fs');
 var file = fs.readFileSync(args.shift(), "utf-8");
 /* Where the magic happens */
 "use strict";
-
+if (args.length === 0){
+	args.push(0);
+}
 function run (source, input){
 	detour.interval = 1;
 	detour.turbo = false;
@@ -285,7 +287,7 @@ var detour = {
 	print(x){
 		detour.outlist.push(x);
 		if (!detour.turbo){
-			process.stdout.write(x.toString() + "\n");
+			process.stdout.write(String(x) + "\n");
 		}
 	},
 	debug:true,
