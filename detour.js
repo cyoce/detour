@@ -435,7 +435,7 @@ var detour = {
 		"O": (x,y) => x | y,
 		"Z": (x,y) => x ^ y,
 		"a": (x,y) => Math.min(x,y),
-		"&": (x,y) => x & y,
+		"A": (x,y) => x & y,
 		"0": (x) => 0,
 		"1": (x) => 1,
 		"2": (x) => 2,
@@ -448,6 +448,8 @@ var detour = {
 		"9": (x) => 9,
 		"G": (x) => detour.register || 0,
 		"g": (x) => detour.register = x,
+		"H": (x) => detour.register2 || 0,
+		"h": (x) => detour.register2 = x,
 	},
 	fdict:{
 		"." (x){
@@ -643,7 +645,7 @@ var detour = {
 				o.move();
 			}
 		},
-		"F" (x,y){ // reduce
+		"&" (x,y){ // reduce
 			var o = new Item (x), p = new Item (x);
 			if (arguments.length > 1){
 				o._move();

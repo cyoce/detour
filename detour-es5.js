@@ -1,16 +1,9 @@
 /* Where the magic happens */
 "use strict";
-var _temporalUndefined = {};
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var Item = _temporalUndefined;
-
-function _temporalAssertDefined(val, name, undef) { if (val === undef) { throw new ReferenceError(name + " is not defined - temporal dead zone"); } return true; }
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
-function _typeof(obj) { return obj && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -152,8 +145,8 @@ function run() {
 		var ln = lastln.slice(1);
 		detour.vars = ln.split("@");
 	}
-	(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.x = input_x;
-	(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.y = input_y;
+	Item.prototype.x = input_x;
+	Item.prototype.y = input_y;
 	var max_length = lines.reduce(function (x, y) {
 		return x.length > y.length ? x : y;
 	}).length;
@@ -176,12 +169,12 @@ function run() {
 					if (typeof val === "string") {
 						val = val.split('').reverse().join('');
 						for (var i = val.length; i--;) {
-							var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+							var o = new Item(x);
 							o.value = val.charCodeAt(i);
 							o.move();
 						}
 					} else {
-						var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+						var o = new Item(x);
 						o.value = val;
 						o.move();
 					}
@@ -193,7 +186,7 @@ function run() {
 	detour.height = detour.chargrid.length;
 	detour.itemgrid = [detour.newgrid(Array)];
 	(_last$input_y$input_x = last(detour.itemgrid)[input_y][input_x]).push.apply(_last$input_y$input_x, _toConsumableArray($("#stdin").val().split(" ").map(Number).map(function (x) {
-		return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+		return new Item(x);
 	})));
 	$("#stop").attr("disabled", false);
 	$(".editor").css("display", "none");
@@ -217,9 +210,9 @@ function run() {
 }
 function genmatrix(chars) {}
 
-Item = (function () {
+var Item = (function () {
 	function Item(val, x, y) {
-		_classCallCheck(this, _temporalAssertDefined(Item, "Item", _temporalUndefined) && Item);
+		_classCallCheck(this, Item);
 
 		var len = arguments.length;
 		if (len <= 1) {
@@ -230,7 +223,7 @@ Item = (function () {
 			this.y = y;
 		}
 		if (len) {
-			if ((typeof val === "undefined" ? "undefined" : _typeof(val)) === "object") {
+			if (typeof val === "object") {
 				for (var i in val) {
 					this[i] = val[i];
 				}
@@ -240,7 +233,7 @@ Item = (function () {
 		}
 	}
 
-	_createClass(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item, [{
+	_createClass(Item, [{
 		key: "move",
 		value: function move(x) {
 			if (~x) do {
@@ -258,7 +251,7 @@ Item = (function () {
 		key: "comp",
 		value: function comp(chars) {
 			var i = 1,
-			    o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(this);
+			    o = new Item(this);
 			o.vals = [];
 			while (i) {
 				o._move();
@@ -286,7 +279,7 @@ Item = (function () {
 				if (this.hasOwnProperty(i)) o[i] = this[i];
 			}
 			o.other = this.other.concat(other.other);
-			return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+			return new Item(o);
 		}
 	}, {
 		key: "toString",
@@ -329,13 +322,13 @@ Item = (function () {
 		}
 	}]);
 
-	return _temporalAssertDefined(Item, "Item", _temporalUndefined) && Item;
+	return Item;
 })();
 
-(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.vx = 1;
-(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.vy = 0;
-(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.moving = true;
-(_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.other = [];
+Item.prototype.vx = 1;
+Item.prototype.vy = 0;
+Item.prototype.moving = true;
+Item.prototype.other = [];
 
 function setup() {
 	for (var i in detour.opdict) {
@@ -344,13 +337,13 @@ function setup() {
 			return function (x) {
 				var o = Object.create(x);
 				o.value = f(o.value);
-				o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+				o = new Item(o);
 				o.move();
 			};
 		})(func);else detour.fdict[i] = (function (f) {
 			return function (x, y) {
 				// console.log(x,y);
-				x = x || new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)();
+				x = x || new Item();
 				var o = x.concat(y);
 				o.value = f(x.value, y.value);
 				o.move();
@@ -546,7 +539,7 @@ var detour = {
 		"a": function a(x, y) {
 			return Math.min(x, y);
 		},
-		"&": function _(x, y) {
+		"A": function A(x, y) {
 			return x & y;
 		},
 		"0": function _(x) {
@@ -584,6 +577,12 @@ var detour = {
 		},
 		"g": function g(x) {
 			return detour.register = x;
+		},
+		"H": function H(x) {
+			return detour.register2 || 0;
+		},
+		"h": function h(x) {
+			return detour.register2 = x;
 		}
 	},
 	fdict: Object.defineProperties({
@@ -596,7 +595,7 @@ var detour = {
 		},
 		"\\": function _(x) {
 			// mirror
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			var o = new Item(x),
 			    temp = o.vx;
 			o.vx = o.vy;
 			o.vy = temp;
@@ -604,7 +603,7 @@ var detour = {
 		},
 		"/": function _(x) {
 			// mirror
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			var o = new Item(x),
 			    temp = o.vx;
 			o.vx = -o.vy;
 			o.vy = -temp;
@@ -612,7 +611,7 @@ var detour = {
 		},
 		"?": function _(x) {
 			// condition
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			if (x > 0) {
 				o.move(1);
 			} else {
@@ -621,13 +620,13 @@ var detour = {
 		},
 		"T": function T(x) {
 			// split
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			if (o.value > 0) o.dir++;
 			o.move();
 		},
 		"Q": function Q(x) {
 			// split
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			if (o.value > 0) {
 				o.dir++;
 				o._move();
@@ -639,49 +638,49 @@ var detour = {
 		},
 		"$": function $(x) {
 			// dupe
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
-			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x),
+			    p = new Item(x);
 			o.move(1);
 			p.move();
 		},
 		";": function _(x) {
 			// recurse
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
-			o.x = (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.x;
-			o.y = (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item).prototype.y;
+			var o = new Item(x);
+			o.x = Item.prototype.x;
+			o.y = Item.prototype.y;
 			o.move(-1);
 			o.dir = 0;
 		},
 		"~": function _(x) {
 			// filter
 			if (x > 0) {
-				new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x).move();
+				new Item(x).move();
 			}
 		},
 		"p": function p(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			o.dir = 0;
 			o.move();
 		},
 		"q": function q(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			o.dir = 2;
 			o.move();
 		},
 		"v": function v(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			o.dir = 3;
 			o.move();
 		},
 		"^": function _(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			o.dir = 1;
 			o.move();
 		},
 		"{": function _(x) {
 			// dupe
 			var o = x.comp("{}"),
-			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			    p = new Item(x);
 			o.move();
 			p.move();
 		},
@@ -691,7 +690,7 @@ var detour = {
 			o.move();
 		},
 		"]": function _(x) {
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			var o = new Item(x),
 			    p = x.comp("][");
 			if (x > 0) {
 				p.move();
@@ -704,13 +703,13 @@ var detour = {
 			if (x <= 0) {
 				o = x.comp("[]");
 			} else {
-				o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+				o = new Item(x);
 			}
 			o.move();
 		},
 		"r": function r(x, y) {
 			// range
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			x = x.value;
 			y = y.value;
 			var swap,
@@ -724,14 +723,14 @@ var detour = {
 			while (x <= y) out.push(x++);
 			if (!swap) out.reverse();
 			for (var i = 0; i < out.length; i++) {
-				var obj = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+				var obj = new Item(o);
 				obj.value = out[i];
 				obj.move();
 			}
 		},
 		"R": function R(x) {
 			// range
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+			var o = new Item(x),
 			    y;
 			y = x.value;
 			x = 1;
@@ -746,15 +745,15 @@ var detour = {
 			while (x <= y) out.push(x++);
 			if (!swap) out.reverse();
 			for (var i = 0; i < out.length; i++) {
-				var obj = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(o);
+				var obj = new Item(o);
 				obj.value = out[i];
 				obj.move();
 			}
 		},
 		"s": function s(x, y) {
 			// swap
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
-			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(y);
+			var o = new Item(x),
+			    p = new Item(y);
 			o.move();
 			p.move();
 		}
@@ -763,7 +762,7 @@ var detour = {
 			get: function get() {
 				var sign = 1;
 				return function (x) {
-					var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
+					var o = new Item(x),
 					    temp = o.vx;
 					o.vx = sign * o.vy;
 					o.vy = sign * temp;
@@ -782,11 +781,11 @@ var detour = {
 			}
 
 			// reduce left
-			if (args.length === 1) return new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]).move(1);
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]),
+			if (args.length === 1) return new Item(args[0]).move(1);
+			var o = new Item(args[0]),
 			    x;
 			o._move();
-			var p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(args[0]);
+			var p = new Item(args[0]);
 			// if (args.length%2) args.push((new Item(0)).concat(p))
 			var func = detour.opdict[detour.chargrid[o.y][o.x]];
 			if (args.length % 2) x = args.pop();
@@ -798,7 +797,7 @@ var detour = {
 		},
 		"S": function S(x, y) {
 			// sum
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			if (arguments.length > 1) {
 				o.value += y.value;
 				o.move(-1);
@@ -808,7 +807,7 @@ var detour = {
 		},
 		"P": function P(x, y) {
 			// product
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x);
 			if (arguments.length > 1) {
 				o.value *= y.value;
 				o.move(-1);
@@ -816,10 +815,10 @@ var detour = {
 				o.move();
 			}
 		},
-		"F": function F(x, y) {
+		"&": function _(x, y) {
 			// reduce
-			var o = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x),
-			    p = new (_temporalAssertDefined(Item, "Item", _temporalUndefined) && Item)(x);
+			var o = new Item(x),
+			    p = new Item(x);
 			if (arguments.length > 1) {
 				o._move();
 				p.value = detour.opdict[detour.chargrid[o.y][o.x]](x.value, y.value);
