@@ -23,7 +23,6 @@ function run (source, input){
 	if (input_y === undefined){
 		var idx = Math.floor(lines.length/2);
 		if ((idx % 2)) idx--;
-	//	console.log(idx, lines.length-idx);
 		for (var i = 0; i < lines.length; i++){
 			lines [i] = (i === idx ? ":" : " ") + lines [i];
 		}
@@ -183,7 +182,6 @@ function setup (){
 			o.move();
 		})(func);
 		else detour.fdict [i] = ((f) => function (x,y){
-			// console.log(x,y);
 			x = x || new Item;
 			var o = x.concat(y);
 			o.value = f (x.value, y.value);
@@ -265,7 +263,6 @@ var detour = {
 		func (...args.splice(-func.length));
 	},
 	stop(){
-			console.log(detour.ticks, (new Date)-detour.start);
 			if (!detour.turbo) clearInterval(detour.__timeout__);
 			detour.go = false;
 	},
