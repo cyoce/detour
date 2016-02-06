@@ -43,7 +43,7 @@ function run (source, input){
 		var line = lines [i];
 
 		if (line.length < max_length){
-			lines [i] += ' '.repeat(max_length - line.length);
+			lines [i] += repeat(' ', max_length - line.length);
 		}
 	}
 	detour.chargrid = lines.map (x => x.split(''));
@@ -546,3 +546,8 @@ var detour = {
 };
 setup();
 run(file, args.map(Number));
+function repeat(iter, count){
+	var out = iter.constructor();
+	while(count--) out = out.concat(iter);
+	return out;
+}
