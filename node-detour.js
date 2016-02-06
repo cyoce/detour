@@ -187,7 +187,7 @@ var Item = (function () {
 		set: function set(val) {
 			val = detour.opdict.m(val, 4);
 			var xy = [- ~val % 2, val % 2].map(function (n) {
-				return n * Math.sign((Math.abs(val - 1.5) | 0) * 2 - 1);
+				return n * sign((Math.abs(val - 1.5) | 0) * 2 - 1);
 			});
 			this.vx = xy[0];
 			this.vy = xy[1];
@@ -725,4 +725,13 @@ function repeat(iter, count) {
 	var out = iter.constructor();
 	while (count--) out = out.concat(iter);
 	return out;
+}
+function sign(x) {
+	x -= 0;
+	if (x === 0) return x;
+	return x > 0 ? 1 : -1;
+}
+function abs(x){
+	x -= 0;
+	return x > 0 ? x : -x;
 }
