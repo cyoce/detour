@@ -562,14 +562,15 @@ var detour = {
 			var o = new Item (x);
 			x = x.value;
 			y = y.value;
-			var swap, out = [];
+			var swap, out;
 			if (x > y){
 				var t = x;
 				x = y;
 				y = t;
 				swap = true;
 			}
-			while (x <= y) out.push(x++);
+			out = Array(y-x + 1);
+			while (y <= x) out [y-x] = y++;
 			if (!swap) out.reverse();
 			for (var i = 0; i < out.length; i++){
 				var obj = new Item (o);
@@ -657,6 +658,12 @@ var detour = {
 		},
 		"u" (...args){ // string
 			detour.print(args.reverse().map (x => x.value).map (x => String.fromCharCode(x)).join(''));
+		},
+		"z" (...args){ // sort
+			args = args.sort((x,y) => (x-y));
+			for (var i in args){
+				args[i].move();
+			}
 		}
 	},
 	reducelist:[]
