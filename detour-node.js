@@ -68,6 +68,7 @@ function run (source, input){
 	detour.start = new Date;
 	detour.ticks = 0;
 	detour.outlist = [];
+	detour.register = 0;
 	if (detour.turbo){
 		detour.go = true;
 		while (detour.go){

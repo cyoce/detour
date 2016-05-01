@@ -1,11 +1,13 @@
 /* Where the magic happens */
 "use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 $(document).ready(load);
 function load() {
@@ -163,7 +165,7 @@ function run() {
 	});
 	detour.funcgrid = detour.chargrid.map(function (x) {
 		return x.map(function (y) {
-			return y === "`" ? (function (s) {
+			return y === "`" ? function (s) {
 				return function (x) {
 					var val = eval(s);
 					if (typeof val === "string") {
@@ -179,7 +181,7 @@ function run() {
 						o.move();
 					}
 				};
-			})(detour.vars.shift()) : detour.fdict[y] || detour.fdict[' '];
+			}(detour.vars.shift()) : detour.fdict[y] || detour.fdict[' '];
 		});
 	});
 	detour.width = detour.chargrid[0].length;
@@ -198,6 +200,7 @@ function run() {
 	detour.ticks = 0;
 	detour.outlist = [];
 	detour.outel = $("#output");
+	detour.register = 0;
 	if (detour.turbo) {
 		detour.go = true;
 		while (detour.go) {
@@ -210,7 +213,7 @@ function run() {
 }
 function genmatrix(chars) {}
 
-var Item = (function () {
+var Item = function () {
 	function Item(val, x, y) {
 		_classCallCheck(this, Item);
 
@@ -223,7 +226,7 @@ var Item = (function () {
 			this.y = y;
 		}
 		if (len) {
-			if (typeof val === "object") {
+			if ((typeof val === "undefined" ? "undefined" : _typeof(val)) === "object") {
 				for (var i in val) {
 					this[i] = val[i];
 				}
@@ -323,7 +326,7 @@ var Item = (function () {
 	}]);
 
 	return Item;
-})();
+}();
 
 Item.prototype.vx = 1;
 Item.prototype.vy = 0;
@@ -333,14 +336,14 @@ Item.prototype.other = [];
 function setup() {
 	for (var i in detour.opdict) {
 		var func = detour.opdict[i];
-		if (func.length === 1) detour.fdict[i] = (function (f) {
+		if (func.length === 1) detour.fdict[i] = function (f) {
 			return function (x) {
 				var o = Object.create(x);
 				o.value = f(o.value);
 				o = new Item(o);
 				o.move();
 			};
-		})(func);else detour.fdict[i] = (function (f) {
+		}(func);else detour.fdict[i] = function (f) {
 			return function (x, y) {
 				// console.log(x,y);
 				x = x || new Item();
@@ -348,7 +351,7 @@ function setup() {
 				o.value = f(x.value, y.value);
 				o.move();
 			};
-		})(func);
+		}(func);
 	}
 	for (var i in detour.reducers) {
 		detour.fdict[i] = detour.reducers[i];
@@ -401,8 +404,9 @@ var detour = {
 			for (detour.x = 0; detour.x < detour.width; detour.x++) {
 				var args = items[detour.y][detour.x],
 				    func = detour.funcgrid[detour.y][detour.x];
-				while (args.length >= func.length && func.length) detour.run(func, args), moving = true;
-				if (~detour.reducelist.indexOf(func) && args.length) reducers.push([detour.x, detour.y, window.__args = args, func]);
+				while (args.length >= func.length && func.length) {
+					detour.run(func, args), moving = true;
+				}if (~detour.reducelist.indexOf(func) && args.length) reducers.push([detour.x, detour.y, window.__args = args, func]);
 			}
 		}
 		var go = detour.fast || confirm("moving");
@@ -427,6 +431,7 @@ var detour = {
 		if (detour.debug && !detour.turbo) $("#stdout").html(detour.table(table));
 		if (detour.itemgrid.length > 20) detour.itemgrid.shift();
 	},
+
 	interval: 350,
 	fast: true,
 	run: function run(func, args) {
@@ -465,6 +470,7 @@ var detour = {
 			detour.outel[0].scrollTop = detour.outel[0].scrollHeight;
 		}
 	},
+
 	debug: true,
 	chargrid: [],
 	funcgrid: [],
@@ -585,7 +591,7 @@ var detour = {
 			return detour.register2 = x;
 		}
 	},
-	fdict: Object.defineProperties({
+	fdict: {
 		".": function _(x) {
 			detour.stop();
 			detour.print(x.value);
@@ -720,8 +726,9 @@ var detour = {
 				swap = true;
 			}
 			out = Array(y - x + 1);
-			while (y <= x) out[y - x] = y++;
-			if (!swap) out.reverse();
+			while (y <= x) {
+				out[y - x] = y++;
+			}if (!swap) out.reverse();
 			for (var i = 0; i < out.length; i++) {
 				var obj = new Item(o);
 				obj.value = out[i];
@@ -742,8 +749,9 @@ var detour = {
 				y = t;
 				swap = true;
 			}
-			while (x <= y) out.push(x++);
-			if (!swap) out.reverse();
+			while (x <= y) {
+				out.push(x++);
+			}if (!swap) out.reverse();
 			for (var i = 0; i < out.length; i++) {
 				var obj = new Item(o);
 				obj.value = out[i];
@@ -756,24 +764,20 @@ var detour = {
 			    p = new Item(y);
 			o.move();
 			p.move();
+		},
+
+		get "%"() {
+			var sign = 1;
+			return function (x) {
+				var o = new Item(x),
+				    temp = o.vx;
+				o.vx = sign * o.vy;
+				o.vy = sign * temp;
+				o.move();
+				sign *= -1;
+			};
 		}
-	}, {
-		"%": {
-			get: function get() {
-				var sign = 1;
-				return function (x) {
-					var o = new Item(x),
-					    temp = o.vx;
-					o.vx = sign * o.vy;
-					o.vy = sign * temp;
-					o.move();
-					sign *= -1;
-				};
-			},
-			configurable: true,
-			enumerable: true
-		}
-	}),
+	},
 	reducers: {
 		"L": function L() {
 			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {

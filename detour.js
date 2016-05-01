@@ -173,6 +173,7 @@ function run (){
 	detour.ticks = 0;
 	detour.outlist = [];
 	detour.outel = $("#output");
+	detour.register = 0;
 	if (detour.turbo){
 		detour.go = true;
 		while (detour.go){
